@@ -1,10 +1,10 @@
 use strict;
 use warnings;
 use Test::More;
-use Alien::proj4;
+use Alien::proj;
 
-diag( 'NAME=' . Alien::proj4->config('name') );
-diag( 'VERSION=' . Alien::proj4->config('version') );
+diag( 'NAME=' . Alien::proj->config('name') );
+diag( 'VERSION=' . Alien::proj->config('version') );
 
 my $alien = Alien::proj4->new;
 
