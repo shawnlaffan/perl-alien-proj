@@ -6,7 +6,7 @@ use Alien::proj;
 diag( 'NAME=' . Alien::proj->config('name') );
 diag( 'VERSION=' . Alien::proj->config('version') );
 
-my $alien = Alien::proj4->new;
+my $alien = Alien::proj->new;
 
 diag 'CFLAGS: ' . $alien->cflags;
 
