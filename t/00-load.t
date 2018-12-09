@@ -12,7 +12,7 @@ alien_ok 'Alien::proj';
 diag(
     sprintf(
         'Testing Alien::proj %s, Perl %s, %s',
-        $Alien::gdal::VERSION, $], $^X
+        $Alien::proj::VERSION, $], $^X
     )
 );
 

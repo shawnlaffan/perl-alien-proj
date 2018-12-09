@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <gdal.h>
+#include <proj.h>
 
 int main()
 {
