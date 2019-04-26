@@ -87,7 +87,7 @@ share {
     #    push @make_clean, '%{make} clean';
     #}
     #  clean up the build dir on cpan testers etc
-    #plugin 'Cleanse::BuildDir';
+    plugin 'Cleanse::BuildDir';
   }
   
   build [
