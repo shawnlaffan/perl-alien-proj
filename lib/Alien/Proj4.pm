@@ -29,7 +29,7 @@ Alien::Proj4 - Compile the PROJ library, version 4
 
 =head1 SYNOPSIS
 
-    use Alien::proj4;
+    use Alien::Proj4;
 
     
 =head1 DESCRIPTION

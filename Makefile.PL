@@ -47,7 +47,7 @@ my %WriteMakefileArgs = (
             },
         },
     },
-    "DISTNAME" => "Alien-proj",
+    "DISTNAME" => "Alien-Proj4",
     "LICENSE"  => "perl",
 );
 
