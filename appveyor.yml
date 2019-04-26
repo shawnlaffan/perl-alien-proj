@@ -25,7 +25,7 @@ install:
   - gcc -v
 
 build_script:
-  - set ALIEN_BUILD_PRELOAD=Fetch::Cache
+  #- set ALIEN_BUILD_PRELOAD=Fetch::Cache
   - perl Makefile.PL
 
   - gmake
