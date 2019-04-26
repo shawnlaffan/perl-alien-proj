@@ -20,10 +20,12 @@ my $base_dir = getcwd();
 
 
 my $min_target_version = '4.9.0';
+my $max_target_version = '4.99.99';
 
 plugin 'PkgConfig' => (
     pkg_name => 'proj',
     minimum_version => $min_target_version,
+    max_version     => $max_target_version,
 );
 
 
@@ -35,8 +37,8 @@ share {
   start_url 'http://download.osgeo.org/proj/';
   #start_url "file://$base_dir";  #  debug
   plugin Download => (
-    filter  => qr/^proj-([0-9\.]+)\.tar\.gz$/,
-    version => qr/^proj-([0-9\.]+)\.tar\.gz$/,
+    filter  => qr/^proj-(4\.[0-9\.]+)\.tar\.gz$/,
+    version => qr/^proj-(4\.[0-9\.]+)\.tar\.gz$/,
   );
 
   my $proj_version = get_proj_version() // 'not yet defined';
@@ -116,19 +118,6 @@ sub rename_la_files {
         rename $file, $file . '.bak';
     }
 
-}
-
-
-sub pause {
-    return;  #  re-enable in case of debug
-    return if $on_automated_rig;
-    return if !$on_windows;
-
-    say "CONTINUE?";
-    my $response = <>;
-    while (not $response =~ /yes/) {
-        $response = <>;
-    }
 }
 
 

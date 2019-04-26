@@ -3,24 +3,24 @@ use warnings;
 use Test::More;
 #use Config;
 use Test::Alien;
-use Alien::proj;
+use Alien::Proj4;
 
-alien_ok 'Alien::proj';
+alien_ok 'Alien::Proj4';
 
 #  nasty hack
-$ENV{LD_LIBRARY_PATH}   = Alien::proj->dist_dir . '/lib';
-$ENV{DYLD_LIBRARY_PATH} = Alien::proj->dist_dir . '/lib';
+$ENV{LD_LIBRARY_PATH}   = Alien::Proj4->dist_dir . '/lib';
+$ENV{DYLD_LIBRARY_PATH} = Alien::Proj4->dist_dir . '/lib';
 
 
-diag ('libs: '   . Alien::proj->libs);
-diag ('cflags: ' . Alien::proj->cflags);
+diag ('libs: '   . Alien::Proj4->libs);
+diag ('cflags: ' . Alien::Proj4->cflags);
 eval {
-    diag ('Dynamic libs: ' . join ':', Alien::proj->dynamic_libs);
+    diag ('Dynamic libs: ' . join ':', Alien::Proj4->dynamic_libs);
 };
 warn $@ if $@;
 
-diag ('bin dir: ' . join (' ', Alien::proj->bin_dir));
-my @bin = Alien::proj->bin_dir;
+diag ('bin dir: ' . join (' ', Alien::Proj4->bin_dir));
+my @bin = Alien::Proj4->bin_dir;
 warn "no proj bin dir found via bin_dir method\n" if not @bin;
 
 TODO: {

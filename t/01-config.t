@@ -1,12 +1,12 @@
 use strict;
 use warnings;
 use Test::More;
-use Alien::proj;
+use Alien::Proj4;
 
-diag( 'NAME=' . Alien::proj->config('name') );
-diag( 'VERSION=' . Alien::proj->config('version') );
+diag( 'NAME=' . Alien::Proj4->config('name') );
+diag( 'VERSION=' . Alien::Proj4->config('version') );
 
-my $alien = Alien::proj->new;
+my $alien = Alien::Proj4->new;
 
 diag 'CFLAGS: ' . $alien->cflags;
 

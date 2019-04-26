@@ -17,8 +17,8 @@ my %common_reqs = (
 my %WriteMakefileArgs = (
     "ABSTRACT" => "Alien package for the PROJ library",
     "AUTHOR"   => 'Shawn Laffan <shawnlaffan@gmail.com>',
-    "NAME"     => "Alien::proj",
-    "VERSION_FROM" => "lib/Alien/proj.pm",
+    "NAME"     => "Alien::Proj4",
+    "VERSION_FROM" => "lib/Alien/Proj4.pm",
     "CONFIGURE_REQUIRES" => {
         %common_reqs,
         "PkgConfig"  => 0,
