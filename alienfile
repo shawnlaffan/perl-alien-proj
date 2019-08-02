@@ -19,7 +19,7 @@ my $base_dir = getcwd();
 
 
 
-my $min_target_version = '4.9.0';
+my $min_target_version = '6.1.0';
 
 plugin 'PkgConfig' => (
     pkg_name => 'proj',
