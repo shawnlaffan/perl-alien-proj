@@ -17,7 +17,11 @@ my $base_dir = getcwd();
 #  make libtool noisy for debug purposes
 #$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
 
-
+plugin 'Build::SearchDep' => (
+  aliens   => ['Alien::sqlite'],
+  public_I => 1,
+  public_l => 1,
+);
 
 my $min_target_version = '6.1.0';
 
