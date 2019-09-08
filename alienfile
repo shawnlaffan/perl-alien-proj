@@ -94,7 +94,6 @@ share {
   
   build [
     \&update_pkg_conf_path,
-    'echo PKG_CONFIG_PATH: %PKG_CONFIG_PATH%',
     "%{configure} $with_local $with_cpp11 $build_static",
     \&pause,
     $make_cmd,
