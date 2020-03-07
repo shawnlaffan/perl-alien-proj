@@ -22,6 +22,8 @@ $ENV{PATH} .= $sep_char
     Alien::sqlite->bin_dir,
     Alien::curl->bin_dir,
 );
+$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
+$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 
 plugin 'Build::SearchDep' => (
   aliens   => ['Alien::sqlite', 'Alien::curl'],
