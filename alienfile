@@ -18,7 +18,7 @@ my $base_dir = getcwd();
 #$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
 
 plugin 'Build::SearchDep' => (
-  aliens   => ['Alien::sqlite'],
+  aliens   => ['Alien::sqlite', 'Alien::curl'],
   public_I => 1,
   public_l => 1,
 );
