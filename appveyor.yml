@@ -26,6 +26,7 @@ install:
 
 build_script:
   - set ALIEN_BUILD_PRELOAD=Fetch::Cache
+  - set ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no --without-curl"
   - perl Makefile.PL
 
   - gmake
