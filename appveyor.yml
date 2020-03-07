@@ -21,12 +21,13 @@ install:
   - cpanm --quiet Alien::Build::Plugin::Cleanse::BuildDir
   - cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
+  - cpanm --quiet Alien::curl
 
   - gcc -v
 
 build_script:
   - set ALIEN_BUILD_PRELOAD=Fetch::Cache
-  - set ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no --without-curl"
+  - set ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no"
   - perl Makefile.PL
 
   - gmake

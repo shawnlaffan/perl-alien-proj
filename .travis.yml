@@ -58,11 +58,12 @@ before_install:
   
   - export quiet='--verbose'
   - cpanm ${quiet} --notest --installdeps .
-  
+  - cpanm ${quiet} Alien::curl
+
 
 script:
   - export ALIEN_BUILD_PRELOAD=Fetch::Cache
-  - export ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no --without-curl"
+  - export ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no"
   - perl Makefile.PL
   - make
   - make test
