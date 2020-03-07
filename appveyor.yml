@@ -24,7 +24,6 @@ install:
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
   - perl -MAlien::sqlite -E "say Alien::sqlite::VERSION";
   - perl -MAlien::sqlite -E "say Alien::sqlite->install_type";
-  - where sqlite3.exe
 
   - gcc -v
 
