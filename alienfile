@@ -93,7 +93,7 @@ share {
   }
   
   my $config_args = $ENV{ALIEN_PROJ_CONFIG_ARGS} // '';
-  $config_args =~ s/[^-\s\w,]//g;  #  overkill?
+  $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
   $config_args = "$with_local $with_cpp11 $build_static $config_args";
   
   build [
