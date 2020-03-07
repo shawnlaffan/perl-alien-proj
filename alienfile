@@ -15,6 +15,7 @@ use Cwd;
 my $base_dir = getcwd();
 
 use Alien::sqlite;
+use Alien::curl;
 my $sep_char = $on_windows ? ';' : ':';
 $ENV{PATH} .= $sep_char
   . join (
