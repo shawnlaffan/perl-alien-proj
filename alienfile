@@ -14,15 +14,13 @@ my $on_automated_rig
 use Cwd;
 my $base_dir = getcwd();
 
+use Env qw( @PATH );
+ 
 use Alien::sqlite;
 use Alien::curl;
 my $sep_char = $on_windows ? ';' : ':';
-$ENV{PATH} .= $sep_char
-  . join (
-    $sep_char,
-    Alien::sqlite->bin_dir,
-    Alien::curl->bin_dir,
-);
+unshift @PATH, Alien::sqlite->bin_dir, Alien::curl->bin_dir;
+  #  we should just add to the package config env var 
 $ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
 $ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 
@@ -84,16 +82,16 @@ share {
   #  try not to exceed the cpan-testers log limits
   if ($on_automated_rig) {
     say "Running under CI or automated testing";
-    $make_cmd      .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|};   print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
-    $make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type install.log/;
-    if (!$on_windows) {
-        $make_cmd =~ s/%%/%/;
-        $make_cmd =~ s/type/cat/;
-        $make_cmd =~ s/"/'/g;
-        $make_inst_cmd =~ s/%%/%/;
-        $make_inst_cmd =~ s/type/cat/;
-        $make_inst_cmd =~ s/"/'/g;
-    }
+    #$make_cmd      .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|};   print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
+    #$make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type install.log/;
+    #if (!$on_windows) {
+    #    $make_cmd =~ s/%%/%/;
+    #    $make_cmd =~ s/type/cat/;
+    #    $make_cmd =~ s/"/'/g;
+    #    $make_inst_cmd =~ s/%%/%/;
+    #    $make_inst_cmd =~ s/type/cat/;
+    #    $make_inst_cmd =~ s/"/'/g;
+    #}
     #if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
     #    push @make_clean, '%{make} clean';
     #}
