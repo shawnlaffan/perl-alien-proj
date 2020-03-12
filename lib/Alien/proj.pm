@@ -40,6 +40,11 @@ This Alien package is probably most useful for compilation of other modules, e.g
 
 The Proj library can be accessed from Perl code via the L<Geo::Proj4> package.
 
+Note: As of version 1.05, share installs will not install version 7 or above.
+Version 7 needs libtiff and curl support, the latter of which needs
+some implementation work.
+
+
 =head1 User defined config args
 
 User defined arguments can be passed to the configure script for share install
