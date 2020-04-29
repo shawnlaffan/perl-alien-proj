@@ -14,7 +14,7 @@ my $on_automated_rig
 use Cwd;
 my $base_dir = getcwd();
 
-use Env qw( @PATH @PKG_CONFIG_PATH );
+use Env qw( @PATH );
 
 use Alien::sqlite;
 unshift @PATH, Alien::sqlite->bin_dir;
@@ -24,14 +24,18 @@ if ($have_alien_curl) {
   unshift @PATH, 'Alien::curl'->bin_dir;
   push @dep_aliens, 'Alien::curl';
 }
-#if (Alien::sqlite->install_type eq 'share') {
-#  push @PKG_CONFIG_PATH,
-#    Alien::sqlite->dist_dir . '/lib/pkgconfig';
-#}
+do {
+  #  limit scope
+  use Env qw / @PKG_CONFIG_PATH /;
+  if (Alien::sqlite->install_type eq 'share') {
+    unshift @PKG_CONFIG_PATH,
+      Alien::sqlite->dist_dir . '/lib/pkgconfig';
+  }
+}
 #  we should just add path to $ENV{PKG_CONFIG_PATH}
 #  but are hitting sep char issues
-$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
-$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
+#$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
+#$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 
 plugin 'Build::SearchDep' => (
   aliens   => [ @dep_aliens ],
@@ -130,7 +134,7 @@ share {
 #
 sub update_pkg_conf_path {
     return if !$on_windows;
-    #use Env qw /@PKG_CONFIG_PATH/;
+    use Env qw /@PKG_CONFIG_PATH/;
     #  msys-ificate drive paths
     @PKG_CONFIG_PATH = map {s{^([a-z]):}{/$1}ri} @PKG_CONFIG_PATH;
     return;
