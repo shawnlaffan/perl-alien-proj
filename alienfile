@@ -17,15 +17,19 @@ my $base_dir = getcwd();
 use Env qw( @PATH );
  
 use Alien::sqlite;
-use Alien::curl;
-my $sep_char = $on_windows ? ';' : ':';
-unshift @PATH, Alien::sqlite->bin_dir, Alien::curl->bin_dir;
-  #  we should just add to the package config env var 
+unshift @PATH, Alien::sqlite->bin_dir;
+my @dep_aliens = ('Alien::sqlite');
+my $have_alien_curl = eval 'require Alien::curl';
+if ($have_alien_curl) {
+  unshift @PATH, 'Alien::curl'->bin_dir;
+  push @dep_aliens, 'Alien::curl';
+}
+#  we should just add to the package config env var 
 $ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
 $ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 
 plugin 'Build::SearchDep' => (
-  aliens   => ['Alien::sqlite', 'Alien::curl'],
+  aliens   => [ @dep_aliens ],
   public_I => 1,
   public_l => 1,
 );
@@ -58,7 +62,7 @@ share {
 
   plugin 'Build::Autoconf' => ();
 
-  my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
+  my $build_static = $on_windows ? '' : '--disable-shared';
   $build_static = '';
   $build_static = '--enable-static=no';  #  override - needed?  leftover from gdal
   $build_static = '' if $ENV{FORCE_DYNAMIC};
