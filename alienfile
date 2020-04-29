@@ -31,7 +31,7 @@ do {
     unshift @PKG_CONFIG_PATH,
       Alien::sqlite->dist_dir . '/lib/pkgconfig';
   }
-}
+};
 #  we should just add path to $ENV{PKG_CONFIG_PATH}
 #  but are hitting sep char issues
 #$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
