@@ -24,13 +24,14 @@ if ($have_alien_curl) {
   unshift @PATH, 'Alien::curl'->bin_dir;
   push @dep_aliens, 'Alien::curl';
 }
-if (Alien::sqlite->install_type eq 'share') {
-  push @PKG_CONFIG_PATH,
-    Alien::sqlite->dist_dir . '/lib/pkgconfig';
-}
+#if (Alien::sqlite->install_type eq 'share') {
+#  push @PKG_CONFIG_PATH,
+#    Alien::sqlite->dist_dir . '/lib/pkgconfig';
+#}
 #  we should just add path to $ENV{PKG_CONFIG_PATH}
-#$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
-#$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
+#  but are hitting sep char issues
+$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
+$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 
 plugin 'Build::SearchDep' => (
   aliens   => [ @dep_aliens ],
