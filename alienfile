@@ -169,8 +169,8 @@ sub update_data_makefile {
   open my $ofh, '>', $target or die "Could not open $target to write to, $!";
   print {$ofh} $contents;
   
-  print $contents;
-  length $contents > 1000 or die "Gah!";
+  #print $contents;
+  die "Gah!" if length $contents < 1000;
   
   return;
 }
