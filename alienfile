@@ -131,7 +131,11 @@ share {
   if (!$have_alien_tiff && $proj_version ge 7) {
     $with_tiff = '--disable-tiff';
   }
-  $config_args = "$with_local $with_cpp11 $with_tiff $build_static $config_args";
+  my $with_curl;
+  if (!$have_alien_curl && $proj_version ge 7) {
+    $with_curl = '';
+  }
+  $config_args = "$with_local $with_cpp11 $with_tiff $with_curl $build_static $config_args";
   
   build [
     $on_windows ? 'which -a sqlite3.exe' : 'which -a sqlite3',
