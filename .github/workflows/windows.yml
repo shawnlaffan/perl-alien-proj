@@ -93,4 +93,12 @@ jobs:
           perl Makefile.PL
           gmake
           gmake test
+
+      - name: On fail
+        if: ${{ failure() }}
+        run: |
+          cat foo.sql
+          export bin=`perl -MAlien::sqlite -E'print Alien::sqlite->bin_dir`
+          rm -f foo.db
+          cat foo.sql | $bin/sqlite3 foo.db
           
