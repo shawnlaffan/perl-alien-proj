@@ -155,6 +155,7 @@ sub update_data_makefile {
                       ->in( $base_dir );
   @files = grep {$_ =~ m|data/Makefile.in$|} @files;  #  clunky
   my $target = $files[0];
+  say "Updating $target to call sqlite3.exe instead of bare sqlite3";
   open my $fh, '<', $target or die "Cannot open $target, $!";
   my $contents;
   do {local $/ = undef; $contents = <$fh>};
