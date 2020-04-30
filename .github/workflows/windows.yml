@@ -115,7 +115,8 @@ jobs:
           pwd
           dir *.sql
           $file = Get-Childitem –Path . -Include foo.sql -File -Recurse -ErrorAction SilentlyContinue
-          Get-Content $file
-          $sq3 = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir . '/sqlite3.exe'"
-          Get-Content $file | & $sq3 foo.db
+          $file
+          #Get-Content $file
+          #$sq3 = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir . '/sqlite3.exe'"
+          #Get-Content $file | & $sq3 foo.db
           
