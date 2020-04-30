@@ -142,8 +142,11 @@ share {
 sub update_pkg_conf_path {
     return if !$on_windows;
     use Env qw /@PKG_CONFIG_PATH/;
+    say 'Modifying drive paths in PKG_CONFIG_PATH';
+    say $ENV{PKG_CONFIG_PATH};
     #  msys-ificate drive paths
     @PKG_CONFIG_PATH = map {s{^([a-z]):}{/$1}ri} @PKG_CONFIG_PATH;
+    say $ENV{PKG_CONFIG_PATH};
     return;
 }
 
