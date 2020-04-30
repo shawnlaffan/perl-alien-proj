@@ -89,6 +89,11 @@ jobs:
           cpanm Alien::Build::Plugin::Cleanse::BuildDir
           cpanm FFI::CheckLib
   
+      - name:  gcc
+        run: |
+          which gcc
+          gcc -v
+
       # Runs a set of commands using the runners shell
       - name: Build
         run: |
