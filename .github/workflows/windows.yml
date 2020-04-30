@@ -84,7 +84,7 @@ jobs:
 
       - name: Install dependencies for Alien::proj
         run: |
-          cpanm -v --notest --installdeps .
+          cpanm -v --notest --installdeps Alien::proj
 
   
       # Runs a set of commands using the runners shell
@@ -97,7 +97,8 @@ jobs:
       - name: On fail
         if: ${{ failure() }}
         run: |
-          ls
+          pwd
+          dir
           cat foo.sql
           export bin=`perl -MAlien::sqlite -E'print Alien::sqlite->bin_dir`
           rm -f foo.db
