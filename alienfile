@@ -124,8 +124,8 @@ share {
   $config_args = "$with_local $with_cpp11 $build_static $config_args";
   
   build [
-    'which -a sqlite3',
-    'echo $PATH',
+    $on_windows ? 'which -a sqlite3.exe' : 'which -a sqlite3',
+    'sqlite3 -version',
     \&update_pkg_conf_path,
     "%{configure} $config_args",
     \&pause,
