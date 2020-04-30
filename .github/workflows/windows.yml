@@ -97,7 +97,7 @@ jobs:
       - name: early feedback
         run: |
           dir
-          Get-Content foo.sql
+          Get-Content Changes
           $bin = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir"
           $bin
 
