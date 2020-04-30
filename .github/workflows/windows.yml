@@ -91,6 +91,6 @@ jobs:
       - name: Build
         run: |
           perl Makefile.PL
-          #gmake
-          #gmake test
+          gmake
+          gmake test
           
