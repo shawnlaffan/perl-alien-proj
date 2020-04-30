@@ -156,6 +156,8 @@ sub update_data_makefile {
   @files = grep {$_ =~ m|data/Makefile.in$|} @files;  #  clunky
   my $target = $files[0];
   say "Updating $target to call sqlite3.exe instead of bare sqlite3";
+  warn "....but more than one found: " . join ' ', @files
+    if @files > 1;
   open my $fh, '<', $target or die "Cannot open $target, $!";
   my $contents;
   do {local $/ = undef; $contents = <$fh>};
@@ -164,6 +166,8 @@ sub update_data_makefile {
   rename $target, "$target.bak";
   open my $ofh, '>', $target or die "Could not open $target to write to, $!";
   print {$ofh} $contents;
+  
+  print $contents;
   
   return;
 }
