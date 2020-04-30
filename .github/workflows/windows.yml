@@ -106,8 +106,8 @@ jobs:
         run: |
           #pwd
           dir
-          cat foo.sql
-          export bin=`perl -MAlien::sqlite -E'print Alien::sqlite->bin_dir`
-          rm -f foo.db
-          cat foo.sql | $bin/sqlite3 foo.db
+          Get-Content foo.sql
+          $bin = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir"
+          #rm -f foo.db
+          Get-Content foo.sql | $bin/sqlite3 foo.db
           
