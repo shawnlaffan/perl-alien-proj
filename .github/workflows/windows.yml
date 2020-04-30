@@ -104,7 +104,7 @@ jobs:
       - name: On fail
         if: ${{ failure() }}
         run: |
-          pwd
+          #pwd
           dir
           cat foo.sql
           export bin=`perl -MAlien::sqlite -E'print Alien::sqlite->bin_dir`
