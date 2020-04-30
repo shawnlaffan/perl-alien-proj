@@ -127,6 +127,8 @@ share {
     \&update_pkg_conf_path,
     "%{configure} $config_args",
     \&pause,
+    'which sqlite3',
+    'echo $PATH',
     $make_cmd,
     $make_inst_cmd,
     #@make_clean,
