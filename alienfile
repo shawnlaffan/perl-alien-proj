@@ -63,7 +63,7 @@ share {
   start_url 'http://download.osgeo.org/proj/';
   #start_url "file://$base_dir";  #  debug
   plugin Download => (
-    filter  => qr/^proj-([0-9\.]+)\.tar\.gz$/,
+    filter  => qr/^proj-6.([0-9\.]+)\.tar\.gz$/,
     version => qr/^proj-([0-9\.]+)\.tar\.gz$/,
   );
 
