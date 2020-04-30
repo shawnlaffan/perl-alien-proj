@@ -16,16 +16,16 @@ install:
   #  or that need updating
   - cpanm --quiet --notest Alien::Build
   - cpanm --quiet --notest Alien::Build::MM
+  - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
   - cpanm --quiet --notest Sort::Versions
   - cpanm --quiet --notest PkgConfig
   - cpanm --quiet Alien::Build::Plugin::Cleanse::BuildDir
   #- cpanm -v Alien::curl | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|};   print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log;
-  - cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
   - cpanm --quiet --notest --installdeps .
-  - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
   - perl -MAlien::sqlite -E "say Alien::sqlite->version";
   - perl -MAlien::sqlite -E "say Alien::sqlite->install_type";
-
+  - cpanm -v --notest --installdeps . 
+  
   - gcc -v
 
 build_script:
