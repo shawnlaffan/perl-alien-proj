@@ -125,8 +125,9 @@ share {
   
   build [
     $on_windows ? 'which -a sqlite3.exe' : 'which -a sqlite3',
-    'sqlite3 -version',
+    #'sqlite3 -version',
     \&update_pkg_conf_path,
+    \&update_data_makefile,
     "%{configure} $config_args",
     \&pause,
     $make_cmd,
@@ -141,6 +142,31 @@ share {
 #    \&rename_la_files,
 #];
 #
+
+#  cope with oddities with MSYS on windows
+sub update_data_makefile {
+  return if !$on_windows;
+  #return if !$ENV{CI};
+  
+  use File::Find::Rule;
+  my @files
+    = File::Find::Rule->file()
+                      ->name( 'Makefile.in' )
+                      ->in( $base_dir );
+  @files = grep {$_ =~ m|data/Makefile.in$|} @files;  #  clunky
+  my $target = $files[0];
+  open my $fh, '<', $target or die "Cannot open $target, $!";
+  my $contents;
+  do {local $/ = undef; $contents = <$fh>};
+  $fh->close;
+  $contents =~ s/sqlite3 proj.db/sqlite3.exe proj.db/;
+  rename $target, "$target.bak";
+  open my $ofh, '>', $target or die "Could not open $target to write to, $!";
+  print {$ofh} $contents;
+  
+  return;
+}
+
 sub update_pkg_conf_path {
     return if !$on_windows;
     use Env qw /@PKG_CONFIG_PATH/;
