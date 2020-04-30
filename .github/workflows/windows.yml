@@ -97,6 +97,7 @@ jobs:
       - name: On fail
         if: ${{ failure() }}
         run: |
+          ls
           cat foo.sql
           export bin=`perl -MAlien::sqlite -E'print Alien::sqlite->bin_dir`
           rm -f foo.db
