@@ -94,6 +94,14 @@ jobs:
           which gcc
           gcc -v
 
+      - name: early feedback
+        run: |
+          dir
+          Get-Content foo.sql
+          $bin = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir"
+          $bin
+
+
       # Runs a set of commands using the runners shell
       - name: Build
         run: |
