@@ -112,7 +112,7 @@ jobs:
       - name: On fail
         if: ${{ failure() }}
         run: |
-          #pwd
+          pwd
           dir *.sql
           $file = Get-Childitem –Path . -Include foo.sql -File -Recurse -ErrorAction SilentlyContinue
           Get-Content $file
