@@ -82,10 +82,12 @@ jobs:
         run: |
           cpanm -v --notest Alien::sqlite
 
-      - name: Install dependencies for Alien::proj
+      - name: Install rest dependencies for Alien::proj
         run: |
-          cpanm -v --notest --installdeps Alien::proj
-
+          #  this is clunky, but we need to avoid Alien:curl for now
+          # cpanm -v --notest --installdeps Alien::proj
+          cpanm Alien::Build::Plugin::Cleanse::BuildDir
+          cpanm FFI::CheckLib
   
       # Runs a set of commands using the runners shell
       - name: Build
