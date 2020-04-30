@@ -8,7 +8,8 @@ my $on_automated_rig
   || $ENV{PERL_CPAN_REPORTER_CONFIG}
   || $ENV{AUTOMATED_TESTING}
   || $ENV{TRAVIS}
-  || $ENV{APPVEYOR};
+  || $ENV{APPVEYOR}
+  || $ENV{CI};
 
 
 use Cwd;
@@ -112,7 +113,10 @@ share {
     #    push @make_clean, '%{make} clean';
     #}
     #  clean up the build dir on cpan testers etc
-    plugin 'Cleanse::BuildDir';
+    #  but not github workflows
+    if (!$ENV{CI}) {
+      plugin 'Cleanse::BuildDir';
+    }
   }
   
   my $config_args = $ENV{ALIEN_PROJ_CONFIG_ARGS} // '';
