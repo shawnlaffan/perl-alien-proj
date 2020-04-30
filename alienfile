@@ -163,8 +163,8 @@ sub update_data_makefile {
   my $contents;
   do {local $/ = undef; $contents = <$fh>};
   $fh->close;
-  $contents =~ s/sqlite3 proj.db/sqlite3.exe proj.db/gms;
-  $contents =~ s{| sqlite3}{> $base_dir/foo.sql && cat $base_dir/foo.sql | sqlite3}ms;
+  #$contents =~ s/sqlite3 proj.db/sqlite3.exe proj.db/gms;
+  $contents =~ s{\| sqlite3 proj.db}{> $base_dir/foo.sql && cat $base_dir/foo.sql | sqlite3.exe proj.db}ms;
   rename $target, "$target.bak";
   open my $ofh, '>', $target or die "Could not open $target to write to, $!";
   print {$ofh} $contents;
