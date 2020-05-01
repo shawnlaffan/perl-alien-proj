@@ -27,6 +27,7 @@ jobs:
         run: |
           choco install strawberryperl
           echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
+          choco install sqlite
   
       - name: perl -V
         run: |
