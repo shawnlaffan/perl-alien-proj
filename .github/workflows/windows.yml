@@ -84,9 +84,10 @@ jobs:
       - name: Install dependencies Alien::sqlite
         run: |
           cpanm -v Alien::sqlite
+          $sqpath = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir
+          $env:PATH="$sqpath;$env:PATH"
           $sqlite3 = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir . '/sqlite3.exe'"
           & $sqlite3 -version
-          
 
       - name: Install rest dependencies for Alien::proj
         run: |
