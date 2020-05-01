@@ -131,7 +131,7 @@ share {
   if (!$have_alien_tiff && $proj_version ge 7) {
     $with_tiff = '--disable-tiff';
   }
-  my $with_curl = '';
+  my $with_curl = '--without-curl';  #  until Alien::libcurl provides dynamic curl-config
   if (!$have_alien_curl && $proj_version ge 7) {
     $with_curl = '--without-curl';  #  until Alien::libcurl provides dynamic curl-config
   }
