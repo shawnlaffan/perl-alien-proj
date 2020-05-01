@@ -116,7 +116,9 @@ jobs:
         if: ${{ always() }}
         run: |
           pwd
-          & 7z.exe a _alien
+          & 7z.exe a _alien.7z
+          $sql_dir = perl -MAlien::sqlite -E"print Alien::sqlite->dist_dir"
+          & 7z.exe a sqlite3_dir.7z $sql_dir  
           #dir *.sql
           #$file = Get-Childitem –Path . -Include foo.sql -File -Recurse -ErrorAction SilentlyContinue
           #$file
@@ -130,3 +132,10 @@ jobs:
         with:
           name: _alien.7z
           path: ./_alien.7z
+
+      - name: Upload artefact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: sqlite3_dir.7z
+          path: ./sqlite3_dir.7z
