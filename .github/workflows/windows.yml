@@ -108,8 +108,8 @@ jobs:
       - name: Build
         run: |
           perl Makefile.PL
-          gmake
-          gmake test
+          #gmake
+          #gmake test
 
       - name: Zip _alien
         #if: ${{ failure() }}
