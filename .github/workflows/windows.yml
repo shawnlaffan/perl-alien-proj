@@ -36,6 +36,7 @@ jobs:
       - name: Prepare for CPAN cache
         run: |
           perl -V > perlversion.txt
+          type "redo sqlite" >> perlversion.txt
           dir perlversion.txt
 
       - name: Cache CPAN modules
@@ -82,7 +83,7 @@ jobs:
 
       - name: Install dependencies Alien::sqlite
         run: |
-          cpanm -v --notest Alien::sqlite
+          cpanm -v Alien::sqlite
 
       - name: Install rest dependencies for Alien::proj
         run: |
