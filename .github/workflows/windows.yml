@@ -29,7 +29,9 @@ jobs:
           echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
   
       - name: perl -V
-        run: perl -V
+        run: |
+          echo $env:PATH
+          perl -V
         
       - name: Prepare for CPAN cache
         run: |
@@ -113,10 +115,18 @@ jobs:
         if: ${{ failure() }}
         run: |
           pwd
-          dir *.sql
-          $file = Get-Childitem –Path . -Include foo.sql -File -Recurse -ErrorAction SilentlyContinue
-          $file
+          & 7z.exe a _alien
+          #dir *.sql
+          #$file = Get-Childitem –Path . -Include foo.sql -File -Recurse -ErrorAction SilentlyContinue
+          #$file
           #Get-Content $file
           #$sq3 = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir . '/sqlite3.exe'"
           #Get-Content $file | & $sq3 foo.db
-          
+
+      - name: Upload artefact
+        uses: actions/upload-artifact@v1
+        run: & 7z.exe _alien
+        with:
+          name: _alien.7z
+          #path: ${DMG_FILE_NAME}
+          path: ./_alien.7z
