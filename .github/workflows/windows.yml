@@ -111,8 +111,9 @@ jobs:
           gmake
           gmake test
 
-      - name: On fail
-        if: ${{ failure() }}
+      - name: Zip _alien
+        #if: ${{ failure() }}
+        if: ${{ always() }}
         run: |
           pwd
           & 7z.exe a _alien
@@ -124,6 +125,7 @@ jobs:
           #Get-Content $file | & $sq3 foo.db
 
       - name: Upload artefact
+        if: ${{ always() }}
         uses: actions/upload-artifact@v1
         with:
           name: _alien.7z
