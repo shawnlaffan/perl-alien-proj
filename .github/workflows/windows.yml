@@ -125,8 +125,6 @@ jobs:
 
       - name: Upload artefact
         uses: actions/upload-artifact@v1
-        run: & 7z.exe _alien
         with:
           name: _alien.7z
-          #path: ${DMG_FILE_NAME}
           path: ./_alien.7z
