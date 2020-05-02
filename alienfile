@@ -159,7 +159,7 @@ share {
 
 #  cope with oddities with MSYS on windows
 sub update_data_makefile {
-  #return;
+  return;
   return if !$on_windows;
   #return if !$ENV{CI};
   local $| = 1;
@@ -170,6 +170,7 @@ sub update_data_makefile {
                       ->name( 'Makefile.in' )
                       ->in( $base_dir );
   @files = grep {$_ =~ m|data/Makefile.in$|} @files;  #  clunky
+  my $sqlite3_exe = Alien::sqlite->bin_dir . '/sqlite3.exe';
   foreach my $target (@files) {
     say "Updating $target to call sqlite3.exe instead of bare sqlite3";
     warn "....but more than one found: " . join ' ', @files
@@ -179,7 +180,8 @@ sub update_data_makefile {
     do {local $/ = undef; $contents = <$fh>};
     $fh->close;
     #$contents =~ s/sqlite3 proj.db/sqlite3.exe proj.db/gms;
-    $contents =~ s{\| sqlite3 proj.db}{> $base_dir/foo.sql && cat $base_dir/foo.sql | sqlite3.exe proj.db}ms;
+    #$contents =~ s{\| sqlite3 proj.db}{> $base_dir/foo.sql && cat $base_dir/foo.sql | $sqlite3_exe proj.db}ms;
+    $contents =~ s{\| sqlite3 proj.db}{| $sqlite3_exe proj.db}ms;
     rename $target, "$target.bak";
     open my $ofh, '>', $target or die "Could not open $target to write to, $!";
     print {$ofh} $contents;
