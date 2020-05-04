@@ -10,8 +10,8 @@ my $on_automated_rig
   || $ENV{PERL_CPAN_REPORTER_CONFIG}
   || $ENV{AUTOMATED_TESTING}
   || $ENV{TRAVIS}
-  || $ENV{APPVEYOR};
-  #|| $ENV{CI};
+  || $ENV{APPVEYOR}
+  || $ENV{CI};
 
 
 use Cwd;
@@ -34,32 +34,15 @@ if ($have{$lib}) {
     #say 'Adding libtiff dependency';
     unshift @PATH, $lib->bin_dir;
     push @dep_aliens, $lib;
-    #if ($on_windows && $lib->install_type eq 'system') {
-    #  #  dirty hack for strawberry perl
-    #  my $p = path ($^X)->parent->parent->parent . '/c/lib/pkgconfig';
-    #  if (-e $p) {
-    #    push @PKG_CONFIG_PATH, $p;
-    #  }
-    #}
-    #  pkgconfig issues between MSYS and windows
-    $ENV{TIFF_CFLAGS} = $lib->cflags;
-    $ENV{TIFF_LIBS}   = $lib->libs;
+    if ($on_windows && $lib->install_type eq 'system') {
+      #  dirty hack for strawberry perl
+      my $p = path ($^X)->parent->parent->parent . '/c/lib/pkgconfig';
+      if (-e $p) {
+        push @PKG_CONFIG_PATH, $p;
+      }
+    }
 }
 
-#do {
-#  #  limit scope
-#  #use Env qw / @PKG_CONFIG_PATH /;
-#  if (Alien::sqlite->install_type eq 'share') {
-#    #unshift @PKG_CONFIG_PATH,
-#    $ENV{PKG_CONFIG_PATH} .= 
-#      ':' . Alien::sqlite->dist_dir . '/lib/pkgconfig';
-#    $ENV{PKG_CONFIG_PATH} =~ s/^://;
-#  }
-#};
-#  we should just add path to $ENV{PKG_CONFIG_PATH}
-#  but are hitting sep char issues
-$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
-$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 say "Alien::sqlite has sqlite version " . Alien::sqlite->version;
 
 plugin 'Build::SearchDep' => (
@@ -157,17 +140,21 @@ share {
     else {
       my $dynamic_config = path ('Alien::curl'->dist_dir . '/dynamic/curl-config');
       if (-e $dynamic_config) {
+        say 'Adding curl support';
         $with_curl = "--with-curl=$dynamic_config";
       }
       elsif ('Alien::curl'->install_type eq 'system') {
         if ('Alien::curl'->cflags =~ /STATIC_LIB/) {
           $with_curl = '--without-curl';
+          say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
         }
         else {
+          say 'Adding curl support';
           $with_curl = '--with_curl=yes';
         }
       }
       else {
+        say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
         #  until we depend on an Alien::libcurl that provides a dynamic curl-config
         $with_curl = '--without-curl';  
       }
@@ -194,7 +181,7 @@ share {
 
 sub update_pkg_conf_path {
     return if !$on_windows;
-    #  should be a before hook
+    #  should be a before or around hook
     use Env qw /@PKG_CONFIG_PATH/;
     say 'Modifying drive paths in PKG_CONFIG_PATH';
     say $ENV{PKG_CONFIG_PATH};
@@ -204,6 +191,7 @@ sub update_pkg_conf_path {
     @PKG_CONFIG_PATH
       = map {s{Alien-curl[/\\]lib[/\\]pkgconfig}{Alien-curl/dynamic/pkgconfig}ri}
         @PKG_CONFIG_PATH;
+    $ENV{PKG_CONFIG_PATH} = join ':', @PKG_CONFIG_PATH;
     say $ENV{PKG_CONFIG_PATH};
     return;
 }
