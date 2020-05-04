@@ -91,12 +91,17 @@ jobs:
           $sqlite3 = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir . '/sqlite3.exe'"
           & $sqlite3 -version
 
-      - name: Install rest dependencies for Alien::proj
+      - name: Install more dependencies for Alien::proj
         run: |
           #  this is clunky, but we need to avoid Alien:curl for now
           # cpanm -v --notest --installdeps Alien::proj
           cpanm Alien::Build::Plugin::Cleanse::BuildDir
           cpanm FFI::CheckLib
+
+      - name: Install Alien::libtiff and Alien::curl
+        run: |
+          cpanm Alien::libtiff  #  will be a system install under strawberry
+          cpanm Alien::curl
   
       - name:  gcc
         run: |
