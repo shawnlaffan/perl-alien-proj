@@ -1,6 +1,8 @@
 use 5.010;
 use alienfile;
 use Sort::Versions;
+use Path::Tiny qw /path/;
+
 
 my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
@@ -15,22 +17,35 @@ my $on_automated_rig
 use Cwd;
 my $base_dir = getcwd();
 
-use Env qw( @PATH );
+use Env qw( @PATH @PKG_CONFIG_PATH );
 
 use Alien::sqlite;
 unshift @PATH, Alien::sqlite->bin_dir;
 my @dep_aliens = ('Alien::sqlite');
-my $have_alien_curl = eval 'require Alien::curl';
-if ($have_alien_curl) {
-  unshift @PATH, 'Alien::curl'->bin_dir;
-  push @dep_aliens, 'Alien::curl';
+my %have;
+my $lib = 'Alien::curl';
+$have{$lib} = eval "require $lib";
+if ($have{$lib}) {
+    unshift @PATH, $lib->dist_dir . '/dynamic';
 }
-#  does not exist at the time of writing
-my $have_alien_tiff = eval 'require Alien::libtiff';
-if ($have_alien_tiff) {
-  unshift @PATH, 'Alien::tiff'->bin_dir;
-  push @dep_aliens, 'Alien::tiff';
+$lib = 'Alien::libtiff';
+$have{$lib} = eval "require $lib";
+if ($have{$lib}) {
+    #say 'Adding libtiff dependency';
+    unshift @PATH, $lib->bin_dir;
+    push @dep_aliens, $lib;
+    #if ($on_windows && $lib->install_type eq 'system') {
+    #  #  dirty hack for strawberry perl
+    #  my $p = path ($^X)->parent->parent->parent . '/c/lib/pkgconfig';
+    #  if (-e $p) {
+    #    push @PKG_CONFIG_PATH, $p;
+    #  }
+    #}
+    #  pkgconfig issues between MSYS and windows
+    $ENV{TIFF_CFLAGS} = $lib->cflags;
+    $ENV{TIFF_LIBS}   = $lib->libs;
 }
+
 #do {
 #  #  limit scope
 #  #use Env qw / @PKG_CONFIG_PATH /;
@@ -127,16 +142,39 @@ share {
   
   my $config_args = $ENV{ALIEN_PROJ_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
-  my $with_tiff = '';
-  if (!$have_alien_tiff && $proj_version ge 7) {
-    $with_tiff = '--disable-tiff';
-  }
-  my $with_curl = '--without-curl';  #  until Alien::libcurl provides dynamic curl-config
-  if (!$have_alien_curl && $proj_version ge 7) {
-    $with_curl = '--without-curl';  #  until Alien::libcurl provides dynamic curl-config
+  my $with_tiff = '';  #  only needed for proj 7+
+  my $with_curl = '';  #  only needed for proj 7+
+  if ($proj_version ge 7) {
+    if (!$have{'Alien::libtiff'}) {
+      $with_tiff = '--disable-tiff';  
+    }
+    else {
+      $with_tiff = '--enable-tiff';
+    }
+    if (!$have{'Alien::curl'}) {
+      $with_curl = '--without-curl';
+    }
+    else {
+      my $dynamic_config = path ('Alien::curl'->dist_dir . '/dynamic/curl-config');
+      if (-e $dynamic_config) {
+        $with_curl = "--with-curl=$dynamic_config";
+      }
+      elsif ('Alien::curl'->install_type eq 'system') {
+        if ('Alien::curl'->cflags =~ /STATIC_LIB/) {
+          $with_curl = '--without-curl';
+        }
+        else {
+          $with_curl = '--with_curl=yes';
+        }
+      }
+      else {
+        #  until we depend on an Alien::libcurl that provides a dynamic curl-config
+        $with_curl = '--without-curl';  
+      }
+    }
   }
   $config_args = "$with_local $with_cpp11 $with_tiff $with_curl $build_static $config_args";
-  
+
   build [
     \&update_pkg_conf_path,
     "%{configure} $config_args",
@@ -156,11 +194,16 @@ share {
 
 sub update_pkg_conf_path {
     return if !$on_windows;
+    #  should be a before hook
     use Env qw /@PKG_CONFIG_PATH/;
     say 'Modifying drive paths in PKG_CONFIG_PATH';
     say $ENV{PKG_CONFIG_PATH};
     #  msys-ificate drive paths
     @PKG_CONFIG_PATH = map {s{^([a-z]):}{/$1}ri} @PKG_CONFIG_PATH;
+    #  make sure we get the dynamic libcurl
+    @PKG_CONFIG_PATH
+      = map {s{Alien-curl[/\\]lib[/\\]pkgconfig}{Alien-curl/dynamic/pkgconfig}ri}
+        @PKG_CONFIG_PATH;
     say $ENV{PKG_CONFIG_PATH};
     return;
 }

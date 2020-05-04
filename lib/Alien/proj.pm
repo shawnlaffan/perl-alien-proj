@@ -6,6 +6,30 @@ use parent qw( Alien::Base );
 
 our $VERSION = '1.06';
 
+my %also;
+
+if (eval 'require Alien::libtiff' && 'Alien::libtiff'->install_type eq 'share') {
+    $also{'Alien::libtiff'}++;
+}
+if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
+    #  we only compile in libcurl when there is a dynamic curl-config 
+    if (-e 'Alien::curl'->dist_dir . '/dynamic/curl-config') {
+        $also{'Alien::curl'}++;
+    }
+}
+
+sub dynamic_libs {
+    my ($self) = @_;
+    
+    my @libs = $self->SUPER::dynamic_libs;
+    
+    foreach my $lib (sort keys %also) {
+        push @libs, $lib->dynamic_libs;
+    }
+    
+    return @libs;
+}
+
 
 1;
 
@@ -41,8 +65,8 @@ although there are also utility programs that could be of use.
 
 The Proj library can be accessed from Perl code via the L<Geo::Proj4> package.
 
-Note: As of version 1.06, share installs will disable libtiff and curl support for proj 7,
-both of which need implementation work.
+Note: As of version 1.07, share installs will look for libtiff and curl support for proj 7
+and include them if they are found, except that curl will not be added if it is statically compiled.
 
 
 =head1 User defined config args
