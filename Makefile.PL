@@ -48,6 +48,20 @@ my %WriteMakefileArgs = (
                 web => 'https://github.com/shawnlaffan/perl-alien-proj/issues/',
             },
         },
+        prereqs => {
+            build => {
+              suggests => {
+                  'Alien::curl' => 0,
+                  'Alien::libtiff' => 0,
+              },
+            },
+            runtime => {
+              suggests => {
+                  'Alien::curl' => 0,
+                  'Alien::libtiff' => 0,
+              },
+            },
+        },
     },
     "DISTNAME" => "Alien-proj",
     "LICENSE"  => "perl",
