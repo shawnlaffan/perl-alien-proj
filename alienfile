@@ -48,10 +48,8 @@ $ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
 $ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
 
 say "Alien::sqlite has sqlite version " . Alien::sqlite->version;
-say "sqlite cflags: " . Alien::sqlite->cflags;
-say "sqlite libs: " . Alien::sqlite->libs; 
-say "exists /usr/local/include/sqlite3.h: "
-  . (-e '/usr/local/include/sqlite3.h' ? 'yes' : 'no');
+#say "sqlite cflags: " . Alien::sqlite->cflags;
+#say "sqlite libs: " . Alien::sqlite->libs; 
 
 plugin 'Build::SearchDep' => (
   aliens   => [ @dep_aliens ],
@@ -95,6 +93,11 @@ share {
   
   if ($^O =~ /bsd/) {
     plugin 'Build::Make' => 'gmake';
+    if (!-e '/usr/local/include/sqlite3.h' && Alien::sqlite->install_type eq 'system') {
+      warn '/usr/local/include/sqlite3.h does not exist, '
+         . 'you might need to install the sqlite package for your system, '
+         . 'or install a share version of Alien::sqlite';
+    }
   }
   elsif ($^O =~ /dragonfly/) {
     #  might need to be combined with bsd check above
