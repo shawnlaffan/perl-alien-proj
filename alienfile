@@ -43,6 +43,11 @@ if ($have{$lib}) {
     }
 }
 
+#  see if this helps with cirrus bsd builds
+#  but are hitting sep char issues
+$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
+$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
+
 say "Alien::sqlite has sqlite version " . Alien::sqlite->version;
 
 plugin 'Build::SearchDep' => (
