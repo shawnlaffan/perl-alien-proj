@@ -51,7 +51,7 @@ say "Alien::sqlite has sqlite version " . Alien::sqlite->version;
 say "sqlite cflags: " . Alien::sqlite->cflags;
 say "sqlite libs: " . Alien::sqlite->libs; 
 say "exists /usr/local/include/sqlite3.h: "
-  . (-e '/usr/local/include/sqlite3.h' ? 'yes' : 'no';
+  . (-e '/usr/local/include/sqlite3.h' ? 'yes' : 'no');
 
 plugin 'Build::SearchDep' => (
   aliens   => [ @dep_aliens ],
