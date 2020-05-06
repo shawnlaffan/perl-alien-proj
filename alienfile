@@ -95,9 +95,6 @@ share {
   
   if ($^O =~ /bsd/) {
     plugin 'Build::Make' => 'gmake';
-    if (-d '/usr/local') {
-        $with_local = ' --with-local=/usr/local ';
-    }
   }
   elsif ($^O =~ /dragonfly/) {
     #  might need to be combined with bsd check above
