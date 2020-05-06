@@ -188,6 +188,7 @@ sub update_pkg_conf_path {
     #  msys-ificate drive paths
     @PKG_CONFIG_PATH = map {s{^([a-z]):}{/$1}ri} @PKG_CONFIG_PATH;
     #  make sure we get the dynamic libcurl
+    #  (although the proj configure script does not currently use it)
     @PKG_CONFIG_PATH
       = map {s{Alien-curl[/\\]lib[/\\]pkgconfig}{Alien-curl/dynamic/pkgconfig}ri}
         @PKG_CONFIG_PATH;

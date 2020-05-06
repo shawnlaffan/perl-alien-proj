@@ -4,12 +4,14 @@ use strict;
 use warnings;
 use parent qw( Alien::Base );
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 my %also;
 
-if (eval 'require Alien::libtiff' && 'Alien::libtiff'->install_type eq 'share') {
-    $also{'Alien::libtiff'}++;
+foreach my $lib (qw /Alien::libtiff Alien::sqlite/) {
+    if (eval "require $lib" && $lib->install_type eq 'share') {
+        $also{$lib}++;
+    }
 }
 if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
     #  we only compile in libcurl when there is a dynamic curl-config 
@@ -17,6 +19,7 @@ if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
         $also{'Alien::curl'}++;
     }
 }
+
 
 sub dynamic_libs {
     my ($self) = @_;
