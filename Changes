@@ -1,5 +1,9 @@
 Revision history for Alien::proj
 
+1.07 2020-05-05
+    - Enable libtiff and curl integration if they are provided
+      by their respective Aliens.
+
 1.06 2020-05-02
     - Re-enable proj 7, but disable libtiff and curl integration
 
