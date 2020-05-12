@@ -199,11 +199,15 @@ sub set_pkgconf_shim {
   use File::Which qw /which/;
   use Path::Tiny qw /path/;
 
+  my $plugin = Alien::Build::Plugin::PkgConfig::Negotiate->pick;
+
   my @found = which $ENV{PKG_CONFIG}
            || which 'ppkg-config'
            || which 'pkg-config';
 
-  die "Could not locate ppkg-config or pkg-config in your path"
+
+  die "Could not locate ppkg-config or pkg-config in your path:\n"
+     . join '', $ENV{PATH}
     if !@found;
   
   my $pk = $found[0];
