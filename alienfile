@@ -34,7 +34,7 @@ if ($have{$lib}) {
     #say 'Adding libtiff dependency';
     unshift @PATH, $lib->bin_dir;
     push @dep_aliens, $lib;
-    if ($on_windows && $lib->install_type eq 'system') {
+    if ($on_windows) { # && $lib->install_type eq 'system') {
       #  dirty hack for strawberry perl
       my $p = path ($^X)->parent->parent->parent . '/c/lib/pkgconfig';
       if (-e $p) {
@@ -170,10 +170,12 @@ share {
   }
   $config_args = "$with_local $with_cpp11 $with_tiff $with_curl $build_static $config_args";
 
+  meta->around_hook( build => \&set_pkgconf_shim );
+  
   build [
-    \&update_pkg_conf_path,
+    #\&pause,
+    #\&update_pkg_conf_path,
     "%{configure} $config_args",
-    \&pause,
     $make_cmd,
     $make_inst_cmd,
     #@make_clean,
@@ -187,7 +189,75 @@ share {
 #];
 #
 
+sub set_pkgconf_shim {
+  my $orig = shift;
+  my $build = shift;
+
+  $orig->($build, @_)
+    if $^O != 'MSWin32';
+  
+  use File::Which qw /which/;
+  use Path::Tiny qw /path/;
+
+  my @found = which 'ppkg-config' || which 'pkg-config';
+
+  die "Could not locate ppkg-config or pkg-config in your path"
+    if !@found;
+  
+  my $pk = $found[0];
+  
+  if ($pk =~ /\.bat$/i) {
+    $pk =~ s/\.bat$//i;
+    die "bat file does not have adjacent pkg-config"
+      if !-e $pk;
+  }
+  
+  my $data = path($pk)->slurp;
+
+  #  flaky  
+  my $str = <<"EOSTRING"
+# lightweight no-dependency version of pkg-config. This will work on any machine
+# with Perl installed.
+EOSTRING
+  ;
+
+  my $fname;  
+  if ($data =~ /$str/msi) {
+    #say 'found pure perl pkg-config';
+    my $perl = $^X;
+    $perl =~ s/\.exe$//i;
+    foreach my $path ($perl, $pk) {
+      $path =~ s{\\}{/}g;
+      $path =~ s{^([a-z]):/}{/$1/}i;
+    }
+    my $args = '$' . join ' $', (1..9);
+    
+    my $shim = <<"EOSHIM"
+#/bin/sh
+
+$perl $pk $args
+EOSHIM
+  ;
+    say "Pure perl pkg-config detected on windows.";
+    say "Wrapping in shell script to cope with MSYS perl and paths.";
+    $fname = path($build->root, 'pkg-config');
+    open my $fh, '>', $fname
+      or die "Unable to open pkg-config wrapper $fname, $!";
+    print {$fh} $shim;
+    close ($fh);
+    say "Setting $ENV{PKG_CONFIG} to point to $fname"; 
+  }
+  
+  local $ENV{PKG_CONFIG} = $fname
+    if $fname;
+
+  $orig->($build, @_);
+}
+
 sub update_pkg_conf_path {
+  $ENV{PKG_CONFIG_PATH} = 'C:\berrybrew\5.28.2_64_PDL\c\lib\pkgconfig;C:\berrybrew\5.30.0_64_PDL\c\lib\pkgconfig';
+  $ENV{PKG_CONFIG} = 'C:\berrybrew\5.28.0_64_PDL\data\pkg-config';
+  return;
     return if !$on_windows;
     #  should be a before or around hook
     use Env qw /@PKG_CONFIG_PATH/;
@@ -223,7 +293,7 @@ sub rename_la_files {
 
 
 sub pause {
-    return;  #  re-enable in case of debug
+    #return;  #  re-enable in case of debug
     return if $on_automated_rig;
     return if !$on_windows;
 
