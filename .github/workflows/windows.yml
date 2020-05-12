@@ -37,7 +37,7 @@ jobs:
       - name: Prepare for CPAN cache
         run: |
           perl -V > perlversion.txt
-          echo 'Alien::sqlite 1.05' >> perlversion.txt
+          echo 'update 2020-05-12' >> perlversion.txt
           dir perlversion.txt
 
       - name: Cache CPAN modules
