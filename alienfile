@@ -194,7 +194,7 @@ sub set_pkgconf_shim {
   my $build = shift;
 
   $orig->($build, @_)
-    if $^O != 'MSWin32';
+    if !$on_windows;
   
   use File::Which qw /which/;
   use Path::Tiny qw /path/;
