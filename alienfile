@@ -199,10 +199,9 @@ sub set_pkgconf_shim {
   use File::Which qw /which/;
   use Path::Tiny qw /path/;
 
-  my $plugin = Alien::Build::Plugin::PkgConfig::Negotiate->pick;
-
   my @found = which $ENV{PKG_CONFIG}
            || which 'ppkg-config'
+           || which 'pkg-config.pl'
            || which 'pkg-config';
 
 
