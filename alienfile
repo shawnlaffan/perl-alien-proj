@@ -199,7 +199,7 @@ sub set_pkgconf_shim {
   use File::Which qw /which/;
   use Path::Tiny qw /path/;
 
-  my @found = which 'ppkg-config' || which 'pkg-config';
+  my @found = which ($ENV{PKG_CONFIG} || 'ppkg-config') || which 'pkg-config';
 
   die "Could not locate ppkg-config or pkg-config in your path"
     if !@found;
@@ -245,7 +245,7 @@ EOSHIM
       or die "Unable to open pkg-config wrapper $fname, $!";
     print {$fh} $shim;
     close ($fh);
-    say "Setting $ENV{PKG_CONFIG} to point to $fname"; 
+    say "Setting \$ENV{PKG_CONFIG} to point to $fname"; 
   }
   
   local $ENV{PKG_CONFIG} = $fname
