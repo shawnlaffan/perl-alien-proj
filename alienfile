@@ -241,7 +241,7 @@ $perl $pk $args
 EOSHIM
   ;
     say "Pure perl pkg-config detected on windows.";
-    say "Wrapping in shell script to cope with MSYS perl and paths.";
+    say "Wrapping $pk in shell script to cope with MSYS perl and paths.";
     $fname = path($build->root, 'pkg-config');
     open my $fh, '>', $fname
       or die "Unable to open pkg-config wrapper $fname, $!";
