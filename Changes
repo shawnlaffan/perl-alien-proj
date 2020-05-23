@@ -3,7 +3,10 @@ Revision history for Alien::proj
 1.07 2020-05-23
     - Set minimum Proj version to 6.1 (GH#1)
     - Enable libtiff and curl integration if they are provided
-      by their respective Aliens.
+      by their respective Aliens (GH#3, GH#4).
+    - List Alien::libtiff and Alien::curl as suggested deps (GH#5).
+    - Wrap pure perl pkg-config on windows so it is called
+      using the user's perl.
 
 1.06 2020-05-02
     - Re-enable proj 7, but disable libtiff and curl integration
