@@ -94,6 +94,7 @@ L<Alien::gdal>
 
 L<Alien::proj4> (if you need to stay on proj version 4)
 
+L<Geo::LibProj::cs2cs>
 
 
 =head1 AUTHORS
