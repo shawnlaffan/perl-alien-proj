@@ -166,6 +166,7 @@ share {
   $config_args = "$with_local $with_cpp11 $with_tiff $with_curl $build_static $config_args";
 
   meta->around_hook( build => \&_pkgconf_wrapper );
+  meta->around_hook( build => \&remove_gitfw_from_path );
   
   build [
     #\&pause,
@@ -183,6 +184,36 @@ share {
 #    \&rename_la_files,
 #];
 #
+
+
+#  git for windows clashes with MSYS
+#  if its /usr/bin dir is in the path
+sub remove_gitfw_from_path {
+  my ($orig, $build, @args) = @_;
+
+  return $orig->($build, @args)
+    if !$on_windows;
+
+  local $ENV{PATH} = $ENV{PATH};
+
+  my $msys_path = eval {
+    path('Alien::MSYS'->msys_path())
+  };
+  return if !defined $msys_path;
+  my $count = @PATH;
+
+  @PATH
+    = grep {path($_)->stringify =~ m|/usr/bin$| && path($_) ne $msys_path ? () : $_}
+      @PATH;
+
+  my $removed = $count - @PATH;
+  if ($removed) {
+    $build->log ("$removed additional .../usr/bin dirs were removed from the path for compilation");
+  }
+
+  $orig->($build, @args);
+}
+
 
 sub _pkgconf_wrapper {
   my ($orig, $build, @args) = @_;
