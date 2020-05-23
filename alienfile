@@ -185,10 +185,9 @@ share {
 #
 
 sub _pkgconf_wrapper {
-warn join ' ', @_;
-  my ($build) = shift;
+  my ($orig, $build, @args) = @_;
 
-  return $build->(@_)
+  return $orig->($build, @args)
     if !$on_windows;
 
   my $pk = File::Which::which ($ENV{PKG_CONFIG})
@@ -197,13 +196,13 @@ warn join ' ', @_;
 
   if (!defined $pk) {
     $build->log ("Could not locate ppkg-config or pkg-config in your path:\n");
-    return $build->(@_);
+    return $orig->($build, @args);
   }
 
   $pk =~ s/\.bat$//i;
   if (!(-e $pk && -e "$pk.bat")) {
     $build->log ("$pk unlikely to be pure perl");
-    return $build->(@_);
+    return $orig->($build, @args);
   }
 
   my $perl = $^X;
@@ -232,7 +231,7 @@ EOWRAPPER
   
   local $ENV{PKG_CONFIG} = $fname;
   
-  return $build->(@_);
+  return $orig->($build, @args);
 }
 
 
