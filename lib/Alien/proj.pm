@@ -3,23 +3,38 @@ package Alien::proj;
 use strict;
 use warnings;
 use parent qw( Alien::Base );
+use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
+use Capture::Tiny qw /:all/;
 
-our $VERSION = '1.07';
+our $VERSION = '1.08';
 
 my %also;
+my @alien_bins = __PACKAGE__->_get_alien_bin();
 
 foreach my $lib (qw /Alien::libtiff Alien::sqlite/) {
     if (eval "require $lib" && $lib->install_type eq 'share') {
         $also{$lib}++;
+        if ($lib->install_type eq 'share') {
+            push @alien_bins, $lib->bin_dir;
+        }
     }
 }
 if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
     #  we only compile in libcurl when there is a dynamic curl-config 
     if (-e 'Alien::curl'->dist_dir . '/dynamic/curl-config') {
         $also{'Alien::curl'}++;
+        if (Alien::curl->install_type eq 'share') {
+            push @alien_bins, Alien::curl->dist_dir . '/dynamic';
+        }
     }
 }
 
+sub _get_alien_bin {
+    my $self = shift;
+    return ($self->bin_dir)
+      if $self->install_type eq 'share';
+    return ();
+}
 
 sub dynamic_libs {
     my ($self) = @_;
@@ -31,6 +46,40 @@ sub dynamic_libs {
     }
     
     return @libs;
+}
+
+sub run_utility {
+    my ($self, $utility, @args) = @_;
+
+    local $ENV{PATH} = $ENV{PATH};
+    unshift @PATH, @alien_bins
+      if @alien_bins;
+
+    #  something of a hack
+    local $ENV{LD_LIBRARY_PATH} = $ENV{LD_LIBRARY_PATH};
+    push @LD_LIBRARY_PATH, $self->dist_dir . '/lib';
+
+    local $ENV{DYLD_LIBRARY_PATH} = $ENV{DYLD_LIBRARY_PATH};
+    push @DYLD_LIBRARY_PATH, $self->dist_dir . '/lib';
+
+    if ($self->install_type eq 'share') {
+        my @bin_dirs = $self->bin_dir;
+        my $bin = $bin_dirs[0] // '';
+        $utility = "$bin/$utility";  #  should strip path from $utility first?
+    }
+    #  handle spaces in path
+    if ($^O =~ /mswin/i) {
+        if ($utility =~ /\s/) {
+            $utility = qq{"$utility"};
+        }
+    }
+    else {
+        $utility =~ s|(\s)|\$1|g;
+    }
+
+
+    #  user gets the pieces if it breaks
+    capture {system $utility, @args};
 }
 
 
@@ -57,6 +106,10 @@ Alien::proj - Compile the Proj library
 =head1 SYNOPSIS
 
     use Alien::proj;
+    
+    #  assuming you have populated @args already
+    my ($stdout, $stderr, $exit_code)
+      = Alien::proj->run_utility ('projinfo', @args);
 
     
 =head1 DESCRIPTION
