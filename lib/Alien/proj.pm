@@ -40,7 +40,7 @@ __END__
 
 =head1 NAME
 
-Alien::proj - Compile the PROJ library
+Alien::proj - Compile the Proj library
 
 =head1 BUILD STATUS
  
