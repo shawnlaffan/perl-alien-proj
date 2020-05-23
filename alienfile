@@ -91,18 +91,13 @@ share {
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   
-  if ($^O =~ /bsd/) {
+  if ($^O =~ /bsd|dragonfly/) {
     plugin 'Build::Make' => 'gmake';
     if (!-e '/usr/local/include/sqlite3.h' && Alien::sqlite->install_type eq 'system') {
       warn '/usr/local/include/sqlite3.h does not exist, '
          . 'you might need to install the sqlite package for your system, '
          . 'or install a share version of Alien::sqlite';
     }
-  }
-  elsif ($^O =~ /dragonfly/) {
-    #  might need to be combined with bsd check above
-    #  but not sure if /usr/local is needed yet
-    plugin 'Build::Make' => 'gmake';
   }
 
   my $make_cmd = '%{make}';
@@ -190,7 +185,8 @@ share {
 #
 
 sub _pkgconf_wrapper {
-  my ($self, $build) = @_;
+warn join ' ', @_;
+  my ($build) = shift;
 
   return $build->(@_)
     if !$on_windows;
