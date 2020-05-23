@@ -57,7 +57,7 @@ plugin 'Build::SearchDep' => (
   public_l => 1,
 );
 
-my $min_target_version = '4.9.0';
+my $min_target_version = '6.0';
 
 plugin 'PkgConfig' => (
     pkg_name => 'proj',
@@ -170,7 +170,7 @@ share {
   }
   $config_args = "$with_local $with_cpp11 $with_tiff $with_curl $build_static $config_args";
 
-  meta->around_hook( build => \&set_pkgconf_shim );
+  #meta->around_hook( build => \&set_pkgconf_shim );
   
   build [
     #\&pause,
@@ -205,8 +205,10 @@ sub set_pkgconf_shim {
            || which 'pkg-config';
 
 
-  die "Could not locate ppkg-config or pkg-config in your path:\n"
+  $build->log (
+    "Could not locate ppkg-config or pkg-config in your path:\n"
      . join '', $ENV{PATH}
+     )
     if !@found;
   
   my $pk = $found[0];
@@ -298,7 +300,7 @@ sub rename_la_files {
 
 
 sub pause {
-    #return;  #  re-enable in case of debug
+    return;  #  re-enable in case of debug
     return if $on_automated_rig;
     return if !$on_windows;
 
