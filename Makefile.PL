@@ -11,8 +11,7 @@ my %common_reqs = (
     "PkgConfig" => 0.19026,
     "Alien::Build::Plugin::Cleanse::BuildDir" => 0,
     'Sort::Versions' => 0,
-    'Alien::sqlite' => 0,
-    #'Alien::curl' => "0.07",
+    'Alien::sqlite' => '1.06',
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
 );
 
