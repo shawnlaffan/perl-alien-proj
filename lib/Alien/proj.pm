@@ -9,7 +9,7 @@ use Capture::Tiny qw /:all/;
 our $VERSION = '1.09';
 
 my %also;
-my @alien_bins = __PACKAGE__->_get_alien_bin();
+my @alien_bins = (__PACKAGE__->bin_dir);
 
 foreach my $lib (qw /Alien::libtiff Alien::sqlite/) {
     if (eval "require $lib" && $lib->install_type eq 'share') {
