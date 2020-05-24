@@ -6,7 +6,7 @@ use parent qw( Alien::Base );
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
 
-our $VERSION = '1.09';
+our $VERSION = '1.10';
 
 my %also;
 my @alien_bins = (__PACKAGE__->bin_dir);
