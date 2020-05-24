@@ -14,6 +14,7 @@ build_requires:
   ExtUtils::MakeMaker: '6.52'
   FFI::CheckLib: '0.23'
   File::Find::Rule: '0'
+  File::Which: '0'
   HTTP::Tiny: '0.044'
   IO::Zlib: '0'
   Mojo::DOM58: '1.00'
@@ -32,6 +33,7 @@ configure_requires:
   Alien::sqlite: '1.06'
   ExtUtils::MakeMaker: '6.52'
   File::Find::Rule: '0'
+  File::Which: '0'
   Path::Tiny: '0'
   PkgConfig: '0'
   Sort::Versions: '0'
@@ -53,7 +55,7 @@ requires:
 resources:
   bugtracker: https://github.com/shawnlaffan/perl-alien-proj/issues/
   repository: https://github.com/shawnlaffan/perl-alien-proj
-version: '1.09'
+version: '1.10'
 x_alienfile:
   generated_by: 'Alien::Build::MM version 2.23'
   requires:

@@ -5,8 +5,9 @@ use warnings;
 use parent qw( Alien::Base );
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
+use File::Which qw /which/;
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 
 my %also;
 my @alien_bins = (__PACKAGE__->bin_dir);
@@ -48,6 +49,11 @@ sub dynamic_libs {
 
 sub run_utility {
     my ($self, $utility, @args) = @_;
+    
+    if (__PACKAGE__->install_type eq 'system' && !which 'projinfo') {
+        warn __PACKAGE__ . " is a system install but lacks the utilities\n"
+        . "Perhaps try a share install.";
+    }
 
     local $ENV{PATH} = $ENV{PATH};
     unshift @PATH, $self->bin_dirs;

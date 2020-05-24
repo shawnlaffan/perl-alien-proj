@@ -32,6 +32,7 @@
             "Env::ShellWords" : "0.01",
             "ExtUtils::MakeMaker" : "6.52",
             "File::Find::Rule" : "0",
+            "File::Which" : "0",
             "HTTP::Tiny" : "0.044",
             "IO::Zlib" : "0",
             "Mojo::DOM58" : "1.00",
@@ -56,6 +57,7 @@
             "Alien::sqlite" : "1.06",
             "ExtUtils::MakeMaker" : "6.52",
             "File::Find::Rule" : "0",
+            "File::Which" : "0",
             "Path::Tiny" : "0",
             "PkgConfig" : "0",
             "Sort::Versions" : "0"
@@ -89,7 +91,7 @@
          "url" : "https://github.com/shawnlaffan/perl-alien-proj"
       }
    },
-   "version" : "1.09",
+   "version" : "1.10",
    "x_alienfile" : {
       "generated_by" : "Alien::Build::MM version 2.23",
       "requires" : {

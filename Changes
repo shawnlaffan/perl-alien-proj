@@ -1,5 +1,9 @@
 Revision history for Alien::proj
 
+1.11 2020-05-25
+    - Mark utility test as todo if projinfo is not installed,
+      warn when user tries to run a utility in such cases.
+
 1.10 2020-05-24 21:00 AEST
     - Fix curl argument to configure under system installs
 
