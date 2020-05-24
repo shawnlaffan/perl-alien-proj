@@ -12,6 +12,7 @@ my %common_reqs = (
     "Alien::Build::Plugin::Cleanse::BuildDir" => 0,
     'Sort::Versions' => 0,
     'Alien::sqlite' => '1.06',
+    "Path::Tiny" => 0,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
 );
 
@@ -67,11 +68,16 @@ my %WriteMakefileArgs = (
 );
 
 use Alien::Build::MM;
-my $abmm = Alien::Build::MM->new ();
+my $abmm = Alien::Build::MM->new (
+    clean_install => 1,
+);
 %WriteMakefileArgs = $abmm->mm_args(%WriteMakefileArgs);
 
 WriteMakefile(%WriteMakefileArgs);
 
+sub MY::install {
+  $abmm->mm_install(@_);
+}
 sub MY::postamble {
   $abmm->mm_postamble;
 }
