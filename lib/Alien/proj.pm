@@ -29,7 +29,7 @@ if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
     }
 }
 
-sub get_bin_dirs {
+sub bin_dirs {
     my $self = shift;
     return @alien_bins;
 }
@@ -111,7 +111,7 @@ Alien::proj - Compile the Proj library
     
     #  Get the bin dirs of Alien::proj and 
     #  all share-installed dependent aliens
-    my @dirs = Alien::proj->get_bin_dirs;
+    my @dirs = Alien::proj->bin_dirs;
 
     
 =head1 DESCRIPTION
