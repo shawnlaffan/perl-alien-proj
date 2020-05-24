@@ -1,5 +1,8 @@
 Revision history for Alien::proj
 
+1.09 2020-05-24 19:00 AEST
+    - Add method to access dependent bin_dirs.
+
 1.08 2020-05-24
     - More diagnostics in tests
     - Set minimum Alien::sqlite version to 1.06 to

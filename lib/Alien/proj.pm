@@ -6,7 +6,7 @@ use parent qw( Alien::Base );
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
 
-our $VERSION = '1.08';
+our $VERSION = '1.09';
 
 my %also;
 my @alien_bins = __PACKAGE__->_get_alien_bin();
@@ -29,11 +29,9 @@ if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
     }
 }
 
-sub _get_alien_bin {
+sub get_bin_dirs {
     my $self = shift;
-    return ($self->bin_dir)
-      if $self->install_type eq 'share';
-    return ();
+    return @alien_bins;
 }
 
 sub dynamic_libs {
@@ -52,8 +50,8 @@ sub run_utility {
     my ($self, $utility, @args) = @_;
 
     local $ENV{PATH} = $ENV{PATH};
-    unshift @PATH, @alien_bins
-      if @alien_bins;
+    unshift @PATH, $self->bin_dirs;
+      #if @alien_bins;
 
     #  something of a hack
     local $ENV{LD_LIBRARY_PATH} = $ENV{LD_LIBRARY_PATH};
@@ -110,6 +108,10 @@ Alien::proj - Compile the Proj library
     #  assuming you have populated @args already
     my ($stdout, $stderr, $exit_code)
       = Alien::proj->run_utility ('projinfo', @args);
+    
+    #  Get the bin dirs of Alien::proj and 
+    #  all share-installed dependent aliens
+    my @dirs = Alien::proj->get_bin_dirs;
 
     
 =head1 DESCRIPTION
