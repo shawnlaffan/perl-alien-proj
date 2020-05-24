@@ -153,8 +153,7 @@ share {
         }
         else {
           say 'Adding curl support';
-          my $conf = which 'curl-config';
-          $with_curl = "--with_curl=$conf";
+          $with_curl = "--with-curl";
         }
       }
       else {
