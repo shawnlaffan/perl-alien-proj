@@ -61,9 +61,12 @@ sub run_utility {
     push @DYLD_LIBRARY_PATH, $self->dist_dir . '/lib';
 
     if ($self->install_type eq 'share') {
-        my @bin_dirs = $self->bin_dir;
-        my $bin = $bin_dirs[0] // '';
-        $utility = "$bin/$utility";  #  should strip path from $utility first?
+        my $bin = $self->bin_dir;
+        if (defined $bin) {
+            #  should strip path from $utility
+            #  if user specified one?
+            $utility = "$bin/$utility";
+        }
     }
     #  handle spaces in path
     if ($^O =~ /mswin/i) {

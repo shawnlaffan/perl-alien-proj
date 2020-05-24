@@ -18,6 +18,7 @@ diag(
 
 
 diag '';
+diag 'Install type is ' . Alien::proj->install_type;
 diag 'Aliens:';
 my %alien_versions;
 foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::curl/) {
