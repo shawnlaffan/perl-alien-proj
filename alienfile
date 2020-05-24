@@ -43,13 +43,7 @@ if ($have{$lib}) {
     }
 }
 
-#  see if this helps with cirrus bsd builds
-$ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
-$ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
-
 say "Alien::sqlite has sqlite version " . Alien::sqlite->version;
-#say "sqlite cflags: " . Alien::sqlite->cflags;
-#say "sqlite libs: " . Alien::sqlite->libs; 
 
 plugin 'Build::SearchDep' => (
   aliens   => [ @dep_aliens ],
@@ -66,6 +60,12 @@ plugin 'PkgConfig' => (
 
 
 share {
+
+  #  see if this helps with cirrus bsd builds
+  $ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
+  $ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
+  say "sqlite cflags: " . Alien::sqlite->cflags;
+  say "sqlite libs: " . Alien::sqlite->libs; 
 
   my $with_local = '';
   my $with_cpp11 = '';

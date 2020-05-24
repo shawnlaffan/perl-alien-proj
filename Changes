@@ -1,5 +1,8 @@
 Revision history for Alien::proj
 
+1.08 2020-05-24
+    - More diagnostics in tests
+
 1.07 2020-05-23
     - Set minimum Proj version to 6.1 (GH#1)
     - Enable libtiff and curl integration if they are provided
