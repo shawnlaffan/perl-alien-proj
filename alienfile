@@ -26,7 +26,7 @@ my %have;
 my $lib = 'Alien::curl';
 $have{$lib} = eval "require $lib";
 if ($have{$lib}) {
-    unshift @PATH, $lib->dist_dir . '/dynamic';
+    unshift @PATH, $lib->dist_dir . '/bin';
 }
 $lib = 'Alien::libtiff';
 $have{$lib} = eval "require $lib";

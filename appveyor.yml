@@ -23,7 +23,7 @@ install:
   #- cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
   #- cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
-  - cpanm -v Alien::sqlite@1.06
+  - cpanm -v Alien::sqlite
   - perl -MAlien::sqlite -E "say Alien::sqlite->version";
   - perl -MAlien::sqlite -E "say Alien::sqlite->install_type";
 
