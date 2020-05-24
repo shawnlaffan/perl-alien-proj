@@ -13,7 +13,7 @@ diag ("\nUtility results:\n" . $result);
 diag ($stderr) if $stderr;
 diag "Exit code is $exit";
 diag '';
-diag Alien::proj->bin_dirs;
+diag (Alien::proj->bin_dirs);
 
 
 done_testing();
