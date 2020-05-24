@@ -2,7 +2,7 @@ use 5.010;
 use alienfile;
 use Sort::Versions;
 use Path::Tiny qw /path/;
-
+use File::Which qw /which/;
 
 my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
@@ -153,7 +153,8 @@ share {
         }
         else {
           say 'Adding curl support';
-          $with_curl = '--with_curl';
+          my $conf = which 'curl-config';
+          $with_curl = "--with_curl=$conf";
         }
       }
       else {

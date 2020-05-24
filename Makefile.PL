@@ -13,6 +13,7 @@ my %common_reqs = (
     'Sort::Versions' => 0,
     'Alien::sqlite' => '1.06',
     "Path::Tiny" => 0,
+    "File::Which" => 0,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
 );
 
