@@ -2,7 +2,8 @@ Revision history for Alien::proj
 
 1.08 2020-05-24
     - More diagnostics in tests
-    - Set minimum Alien::sqlite versin to 1.06 
+    - Set minimum Alien::sqlite version to 1.06 to
+      ensure the sqlite3 binary is available. 
 
 1.07 2020-05-23
     - Set minimum Proj version to 6.1 (GH#1)
