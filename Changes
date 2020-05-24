@@ -1,5 +1,8 @@
 Revision history for Alien::proj
 
+1.10 2020-05-24 21:00 AEST
+    - Fix curl usage under system installs
+    
 1.09 2020-05-24 19:00 AEST
     - Add method to access dependent bin_dirs.
     - Add Path::Tiny as a dependency.
