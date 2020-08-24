@@ -56,9 +56,11 @@ before_install:
 
   - cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
+  - cpanm --quiet --installdeps Alien::sqlite
+  - cpanm --quiet --installdeps Alien::libtiff
   - cpanm -v Alien::sqlite
   - cpanm -v Alien::libtiff
-  - export quiet='--verbose'
+  #- export quiet='--verbose'
   - export quiet='--quiet'
   - cpanm ${quiet} --notest --installdeps .
   #- cpanm ${quiet} Alien::curl
