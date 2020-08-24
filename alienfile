@@ -74,6 +74,11 @@ share {
   my $with_local = '';
   my $with_cpp11 = '';
 
+  if ($on_windows) {
+    #  there are issues with strawberry perl's gcc
+    plugin 'Prefer::BadVersion' => '7.1.0';
+  }
+  
   start_url 'http://download.osgeo.org/proj/';
   #start_url "file://$base_dir";  #  debug
   plugin Download => (
