@@ -85,7 +85,7 @@ jobs:
 
       - name: Install dependencies Alien::sqlite
         run: |
-          cpanm -v Alien::sqlite~1.05
+          cpanm -v Alien::sqlite
           #dir C:\strawberry\c\bin
           $sqpath = perl -MAlien::sqlite -E"print Alien::sqlite->bin_dir"
           $env:PATH="$sqpath;$env:PATH"
