@@ -53,13 +53,13 @@ my %WriteMakefileArgs = (
         prereqs => {
             build => {
               suggests => {
-                  'Alien::curl' => 0,
+                  'Alien::curl' => '0.08',
                   'Alien::libtiff' => 0,
               },
             },
             runtime => {
               suggests => {
-                  'Alien::curl' => 0,
+                  'Alien::curl' => '0.08',
                   'Alien::libtiff' => 0,
               },
             },
