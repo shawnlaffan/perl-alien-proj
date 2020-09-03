@@ -98,6 +98,7 @@ jobs:
           # cpanm -v --notest --installdeps Alien::proj
           cpanm Alien::Build::Plugin::Cleanse::BuildDir
           cpanm FFI::CheckLib
+          cpanm --quiet --notest Alien::Build::Plugin::PkgConfig::PPWrapper
           cpanm --installdeps .
 
       - name: Install Alien::libtiff and Alien::curl

@@ -56,6 +56,7 @@ before_install:
 
   - cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
+  - cpanm --quiet --notest Alien::Build::Plugin::PkgConfig::PPWrapper
   - cpanm --quiet --installdeps Alien::sqlite
   - cpanm --quiet --installdeps Alien::libtiff
   - cpanm -v Alien::sqlite
