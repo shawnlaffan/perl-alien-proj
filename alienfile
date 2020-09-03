@@ -147,10 +147,12 @@ share {
   my $with_curl = '';  #  only needed for proj 7+
   if ($proj_version ge 7) {
     if (!$have{'Alien::libtiff'}) {
-      $with_tiff = '--disable-tiff';  
+      $with_tiff = '--disable-tiff';
+      say 'Disabling TIFF support';
     }
     else {
       $with_tiff = '--enable-tiff';
+      say 'Enabling TIFF support';
     }
     if (!$have{'Alien::curl'}) {
       $with_curl = '--without-curl';
