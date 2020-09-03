@@ -26,6 +26,7 @@ install:
   - cpanm -v Alien::sqlite
   - perl -MAlien::sqlite -E "say Alien::sqlite->version";
   - perl -MAlien::sqlite -E "say Alien::sqlite->install_type";
+  - cpanm Alien::curl
 
   - gcc -v
 
