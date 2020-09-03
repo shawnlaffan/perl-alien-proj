@@ -9,7 +9,7 @@ task:
   install_script:
     - sudo pkg install -y autoconf automake libtool pkgconf sqlite3 tiff gmake curl
     - sudo pkg install -y p5-App-cpanminus
-    - sudo cpanm --installdeps .
+    #- sudo cpanm --installdeps .
     - sudo cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
     - sudo cpanm --installdeps --notest Alien::proj
     - sudo cpanm Alien::curl
