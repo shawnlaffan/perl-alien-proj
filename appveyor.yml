@@ -28,12 +28,13 @@ install:
   - perl -MAlien::sqlite -E "say Alien::sqlite->version";
   - perl -MAlien::sqlite -E "say Alien::sqlite->install_type";
   - cpanm Alien::curl
+  - cpanm -v Alien::libtiff
 
   - gcc -v
 
 build_script:
   - set ALIEN_BUILD_PRELOAD=Fetch::Cache
-  - set ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no"
+  #- set ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no"
   - perl Makefile.PL
   - cpanm --installdeps --notest .
 
