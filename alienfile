@@ -34,12 +34,17 @@ if ($have{$lib}) {
     #say 'Adding libtiff dependency';
     unshift @PATH, $lib->bin_dir;
     push @dep_aliens, $lib;
-    if ($on_windows) { # && $lib->install_type eq 'system') {
+    my $p;
+    if ($on_windows && $lib->install_type eq 'system') {
       #  dirty hack for strawberry perl
-      my $p = path ($^X)->parent->parent->parent . '/c/lib/pkgconfig';
-      if (-e $p) {
-        push @PKG_CONFIG_PATH, $p;
-      }
+      $p = path ($^X)->parent->parent->parent . '/c/lib/pkgconfig';
+    }
+    elsif ($lib->install_type eq 'share') {
+      $p = path ($lib->dist_dir, 'lib', 'pkgconfig');
+    }
+    if ($p && -e $p) {
+      push @PKG_CONFIG_PATH, $p;
+      say join ' ', @PKG_CONFIG_PATH;
     }
 }
 
@@ -69,7 +74,15 @@ share {
   $ENV{SQLITE3_CFLAGS} = Alien::sqlite->cflags;
   $ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
   say "sqlite cflags: " . Alien::sqlite->cflags;
-  say "sqlite libs: " . Alien::sqlite->libs; 
+  say "sqlite libs: " . Alien::sqlite->libs;
+  if ($have{'Alien::libtiff'}) {
+    $ENV{TIFF_LIBS}
+      = '-L'
+      . path ('Alien::libtiff'->dist_dir, 'lib')
+      . ' '
+      . 'Alien::libtiff'->libs;
+    say "libtiff libs: $ENV{TIFF_LIBS}";
+  }
 
   my $with_local = '';
   my $with_cpp11 = '';
@@ -186,6 +199,7 @@ share {
   plugin 'PkgConfig::PPWrapper';
   meta->around_hook( build => \&remove_gitfw_from_path );
 
+  say 'PKG_CONFIG_PATH:' . join ' ', @PKG_CONFIG_PATH;
   
   build [
     #\&pause,
