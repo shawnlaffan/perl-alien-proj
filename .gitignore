@@ -37,3 +37,5 @@ inc/
 /_alien*/*
 #  alien build dir
 ^_alien
+
+^_archives
