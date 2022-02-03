@@ -205,9 +205,12 @@ share {
   #  silence an undef warning
   say 'PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH;
   
+  #  ensure these are not overridden (not needed for cmake builds)
+  my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2'};    
+    
   build [
     #\&pause,
-    "%{configure} $config_args",
+    "%{configure} $config_flags $config_args",
     $make_cmd,
     $make_inst_cmd,
     \&rename_la_files,
