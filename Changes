@@ -1,5 +1,8 @@
 Revision history for Alien::proj
 
+1.17 2022-02-03
+    - ensure share builds use -O2
+
 1.16 2021-12-13
     - Support perls back to 5.10, @mohawk2++
 

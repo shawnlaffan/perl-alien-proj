@@ -162,7 +162,7 @@ share {
   my $with_tiff = '';  #  only needed for proj 7+
   my $with_curl = '';  #  only needed for proj 7+
   if ($proj_version ge 7) {
-    if (!$have{'Alien::libtiff'}) {
+    if (!$have{'Alien::libtiff'} or $config_args =~ /--(without-tiff|with-tiff=no)/) {
       $with_tiff = '--disable-tiff';
       say 'Disabling TIFF support';
     }
@@ -170,7 +170,7 @@ share {
       $with_tiff = '--enable-tiff';
       say 'Enabling TIFF support';
     }
-    if (!$have{'Alien::curl'}) {
+    if (!$have{'Alien::curl'} or $config_args =~ /--(without-curl|with-curl=no)/ ) {
       $with_curl = '--without-curl';
     }
     else {
@@ -185,7 +185,7 @@ share {
           say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
         }
         else {
-          say 'Adding curl support';
+          say 'Adding curl support from system';
           $with_curl = "--with-curl";
         }
       }
@@ -206,7 +206,12 @@ share {
   say 'PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH;
   
   #  ensure these are not overridden (not needed for cmake builds)
-  my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2'};    
+  my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2'};
+  #$config_flags = '';
+  
+  foreach my $env_var (qw /LD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
+    say "ENV: $env_var is " . ($ENV{$env_var} // '');
+  }
     
   build [
     #\&pause,
