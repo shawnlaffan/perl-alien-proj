@@ -173,8 +173,9 @@ share {
     else {
       my $dynamic_config = path ('Alien::curl'->dist_dir . '/dynamic/curl-config');
       if (-e $dynamic_config) {
-        say 'Adding curl support';
+        say 'Adding curl support from dynamic dir does not yet work';
         $enable_curl = "ON";
+        push @PATH, path ('Alien::curl'->dist_dir . '/dynamic');
       }
       elsif ('Alien::curl'->install_type eq 'system') {
         if ('Alien::curl'->cflags =~ /STATIC_LIB/) {
