@@ -205,6 +205,7 @@ share {
   #meta->around_hook( build => \&_pkgconf_wrapper );
   plugin 'PkgConfig::PPWrapper';
   meta->around_hook( build => \&remove_gitfw_from_path );
+  meta->around_hook( build => \&update_cmake_lists_file );
 
   #  silence an undef warning
   say 'PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH;
@@ -238,7 +239,7 @@ share {
   ];
     
   build [
-    \&pause,
+    #\&pause,
     'mkdir _build',
     'cd _build',
     $cmake_cmd,
@@ -380,6 +381,56 @@ sub pause {
         $response = <>;
     }
 }
+
+sub update_cmake_lists_file {
+    my ($orig, $build, @args) = @_;
+
+    #  only needed on windows for v9.0.0 or earlier
+    return $orig->($build, @args)
+      if $on_windows and versioncmp (get_proj_version(), '9.0.0') < 0; 
+
+    $build->log ('updating CMakeLists.txt to properly handle proj.pc');
+    
+    #my $h = $build->install_prop;
+    #use Data::Printer;
+    #p $h;
+    
+    use File::Find::Rule;
+    my ($cmake_lists_file)
+      = File::Find::Rule
+                ->file()
+                ->name( 'CMakeLists.txt' )
+                ->in( $build->install_prop->{extract} );
+    #$build->log ("====\ncmake file: $cmake_lists_file \n ====");
+    open my $fh , '<', $cmake_lists_file
+      or die "Could not open $cmake_lists_file for reading, $!";
+    my $file_contents;
+
+    my $define_check = <<EOD
+if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+  set(CMAKE_INSTALL_LIBDIR lib)
+endif(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+EOD
+  ;
+  
+    while (my $line = <$fh>) {
+        if ($line =~ /^\s*configure_proj_pc/) {
+#say STDERR "ADDING TO CMAKE LISTS"; 
+          $line .= $define_check;
+        }
+        $file_contents .= $line;
+    }
+    $fh->close;
+
+    rename $cmake_lists_file, "$cmake_lists_file.bak";
+    open my $ofh, '>', $cmake_lists_file
+      or die "Could not open $cmake_lists_file for writing, $!";
+    print {$ofh} $file_contents;
+    $ofh->close or die $!;
+
+    $orig->($build, @args);
+}
+
 
 
 sub get_proj_version {
