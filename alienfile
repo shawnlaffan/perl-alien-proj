@@ -116,11 +116,6 @@ share {
 
   plugin 'Build::CMake' => ();
   plugin 'Build::MSYS';
-
-  my $build_static = $on_windows ? '' : '--disable-shared';
-  $build_static = '';
-  $build_static = '--enable-static=no';  #  override - needed?  leftover from gdal
-  $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   
   if ($^O =~ /bsd|dragonfly/) {
@@ -200,7 +195,6 @@ share {
       }
     }
   }
-  $config_args = "$with_local $with_cpp11 $with_tiff $with_curl $build_static $config_args";
 
   #meta->around_hook( build => \&_pkgconf_wrapper );
   plugin 'PkgConfig::PPWrapper';
