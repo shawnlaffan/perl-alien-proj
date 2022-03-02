@@ -158,15 +158,15 @@ share {
   
   my $config_args = $ENV{ALIEN_PROJ_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
-  my $with_tiff = '';  #  only needed for proj 7+
+  my $enable_tiff = 'OFF';  #  only needed for proj 7+
   my $enable_curl = 'OFF';  #  only needed for proj 7+
   if ($proj_version ge 7) {
     if (!$have{'Alien::libtiff'} or $config_args =~ /--(without-tiff|with-tiff=no)/) {
-      $with_tiff = '--disable-tiff';
+      $enable_tiff = 'OFF';
       say 'Disabling TIFF support';
     }
     else {
-      $with_tiff = '--enable-tiff';
+      $enable_tiff = 'ON';
       say 'Enabling TIFF support';
     }
     if (!$have{'Alien::curl'} or $config_args =~ /--(without-curl|with-curl=no)/ ) {
@@ -222,7 +222,7 @@ share {
     #'-DSQLITE3_INCLUDE_DIR=??',
     #'-DSQLITE3_LIBRARY=??',
     "-DENABLE_CURL=$enable_curl",
-    '-DENABLE_TIFF=OFF',
+    "-DENABLE_TIFF=$enable_tiff",
     '-DBUILD_PROJSYNC=OFF',
     #'-DENABLE_IPO=ON',
     #'-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true',
