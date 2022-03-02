@@ -245,9 +245,7 @@ share {
     $cmake_cmd,
     $make_cmd,
     #($run_tests ? '%{make} test' : ()),
-    #\&pause,
     $make_inst_cmd,
-    \&rename_la_files,
   ];
 
 
@@ -353,25 +351,8 @@ sub update_pkg_conf_path {
     return;
 }
 
-sub rename_la_files {
-    #  need to return if not share
-    return if !$on_windows;
-    
-    use File::Find::Rule;
-    my @la_files
-      = File::Find::Rule->file()
-                        ->name( '*.la' )
-                        ->in( $base_dir );
-    foreach my $file (@la_files) {
-        say "Renaming $file so it will not interfere with gdal compilation";
-        rename $file, $file . '.bak';
-    }
-
-}
-
-
 sub pause {
-    #return;  #  re-enable in case of debug
+    return;  #  re-enable in case of debug
     return if $on_automated_rig;
     return if !$on_windows;
 
