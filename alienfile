@@ -156,11 +156,10 @@ share {
   
   my $config_args = $ENV{ALIEN_PROJ_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
-  my $enable_tiff = 'OFF';  #  only needed for proj 7+
-  my $enable_curl = 'OFF';  #  only needed for proj 7+
-  #my ($curl_include_dir, $curl_library);
+  my $enable_tiff = 'OFF';
+  my $enable_curl = 'OFF';
   my @curl_extra_args;
-  my ($tiff_include_dir, $tiff_include_dir);
+  my @tiff_extra_args;
   if ($proj_version ge 7) {
     if (!$have{'Alien::libtiff'} or $config_args =~ /--(without-tiff|with-tiff=no)/) {
       $enable_tiff = 'OFF';
@@ -169,6 +168,19 @@ share {
     else {
       $enable_tiff = 'ON';
       say 'Enabling TIFF support';
+      #  might need this but it depends on a few things
+      if (Alien::libtiff->install_type ('share')) {
+        my $libtiff_include = path ('Alien::libtiff'->dist_dir . '/include')->stringify;
+        #  grab the first one - could cause trouble later?
+        my @libtiffs = File::Find::Rule
+                  ->file()
+                  ->name( 'libtiff*' )
+                  ->in( path ('Alien::libtiff'->dist_dir) );
+        push @curl_extra_args, (
+          "-DTIFF_LIBRARY=$libtiffs[0]",
+          "-DTIFF_INCLUDE_DIR=$libtiff_include",
+        );
+      }
     }
     if (!$have{'Alien::curl'} or $config_args =~ /--(without-curl|with-curl=no)/ ) {
       $enable_curl = 'OFF';
@@ -179,12 +191,12 @@ share {
         say 'Adding curl support from dynamic dir does not yet work';
         $enable_curl = "ON";
         push @PATH, path ('Alien::curl'->dist_dir . '/dynamic');
-        my $curl_library = path ('Alien::curl'->dist_dir . '/include');
-        #  grab the first one
+        my $curl_include = path ('Alien::curl'->dist_dir . '/include')->stringify;
+        #  grab the first one - could cause trouble?
         my $libcurl = (glob path ('Alien::curl'->dist_dir . '/dynamic/libcurl*'))[0];
         push @curl_extra_args, (
-          "-DCURL_LIBRARY=$curl_library",
-          "-DCURL_INCLUDE_DIR=$libcurl",
+          "-DCURL_LIBRARY=$libcurl",
+          "-DCURL_INCLUDE_DIR=$curl_include",
         );
       }
       elsif ('Alien::curl'->install_type eq 'system') {
@@ -212,11 +224,7 @@ share {
 
   #  silence an undef warning
   say 'PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH;
-  
-  #  ensure these are not overridden (not needed for cmake builds)
-  #my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2'};
-  #$config_flags = '';
-  
+
   foreach my $env_var (qw /LD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
     say "ENV: $env_var is " . ($ENV{$env_var} // '');
   }
