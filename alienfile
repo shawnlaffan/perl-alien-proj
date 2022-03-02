@@ -158,7 +158,9 @@ share {
   $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
   my $enable_tiff = 'OFF';  #  only needed for proj 7+
   my $enable_curl = 'OFF';  #  only needed for proj 7+
-  my ($curl_include_dir, $curl_library);
+  #my ($curl_include_dir, $curl_library);
+  my @curl_extra_args;
+  my ($tiff_include_dir, $tiff_include_dir);
   if ($proj_version ge 7) {
     if (!$have{'Alien::libtiff'} or $config_args =~ /--(without-tiff|with-tiff=no)/) {
       $enable_tiff = 'OFF';
@@ -177,11 +179,13 @@ share {
         say 'Adding curl support from dynamic dir does not yet work';
         $enable_curl = "ON";
         push @PATH, path ('Alien::curl'->dist_dir . '/dynamic');
-        $curl_include_dir = path ('Alien::curl'->dist_dir . '/include');
-        #grab the first one
-        my @libcurls = glob path ('Alien::curl'->dist_dir . '/dynamic/libcurl*');
-        $curl_library = $libcurls[0];
-        #push @PKG_CONFIG_PATH, path ('Alien::curl'->dist_dir . '/dynamic/pkgconfig');
+        my $curl_library = path ('Alien::curl'->dist_dir . '/include');
+        #  grab the first one
+        my $libcurl = (glob path ('Alien::curl'->dist_dir . '/dynamic/libcurl*'))[0];
+        push @curl_extra_args, (
+          "-DCURL_LIBRARY=$curl_library",
+          "-DCURL_INCLUDE_DIR=$libcurl",
+        );
       }
       elsif ('Alien::curl'->install_type eq 'system') {
         if ('Alien::curl'->cflags =~ /STATIC_LIB/) {
@@ -227,11 +231,9 @@ share {
     #'-DSQLITE3_INCLUDE_DIR=??',
     #'-DSQLITE3_LIBRARY=??',
     "-DENABLE_CURL=$enable_curl",
-    $enable_curl ? (
-      "-DCURL_LIBRARY=$curl_library",
-      "-DCURL_INCLUDE_DIR=$curl_include_dir"
-    ) : (),
+    @curl_extra_args,
     "-DENABLE_TIFF=$enable_tiff",
+    $enable_tiff ? () : (),
     '-DBUILD_PROJSYNC=OFF',
     #'-DENABLE_IPO=ON',
     #'-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true',
