@@ -7,7 +7,7 @@ task:
     MAKE_FLAGS: -j 4
   
   install_script:
-    - sudo pkg install -y autoconf automake libtool pkgconf sqlite3 tiff gmake curl cmake
+    - sudo pkg install -y pkgconf sqlite3 tiff gmake curl cmake
     - sudo pkg install -y perl5 p5-App-cpanminus
     #- sudo cpanm --installdeps .
     - sudo cpanm --verbose Data::Dump
