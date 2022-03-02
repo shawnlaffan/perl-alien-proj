@@ -76,16 +76,16 @@ share {
   $ENV{SQLITE3_LIBS} = Alien::sqlite->libs;
   say "sqlite cflags: " . Alien::sqlite->cflags;
   say "sqlite libs: " . Alien::sqlite->libs;
-  if ($have{'Alien::libtiff'}) {
-    my $p = path ('Alien::libtiff'->dist_dir, 'lib');
-    $ENV{TIFF_LIBS}
-      ||= (-e $p
-            ? "-L$p "
-            : ''
-          )
-          . 'Alien::libtiff'->libs;
-    say "libtiff libs: $ENV{TIFF_LIBS}";
-  }
+  #if ($have{'Alien::libtiff'}) {
+  #  my $p = path ('Alien::libtiff'->dist_dir, 'lib');
+  #  $ENV{TIFF_LIBS}
+  #    ||= (-e $p
+  #          ? "-L$p "
+  #          : ''
+  #        )
+  #        . 'Alien::libtiff'->libs;
+  #  say "libtiff libs: $ENV{TIFF_LIBS}";
+  #}
 
 
   if ($on_windows) {
