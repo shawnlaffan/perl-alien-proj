@@ -159,7 +159,7 @@ share {
   my $config_args = $ENV{ALIEN_PROJ_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
   my $with_tiff = '';  #  only needed for proj 7+
-  my $with_curl = '';  #  only needed for proj 7+
+  my $enable_curl = 'OFF';  #  only needed for proj 7+
   if ($proj_version ge 7) {
     if (!$have{'Alien::libtiff'} or $config_args =~ /--(without-tiff|with-tiff=no)/) {
       $with_tiff = '--disable-tiff';
@@ -170,28 +170,28 @@ share {
       say 'Enabling TIFF support';
     }
     if (!$have{'Alien::curl'} or $config_args =~ /--(without-curl|with-curl=no)/ ) {
-      $with_curl = '--without-curl';
+      $enable_curl = 'OFF';
     }
     else {
       my $dynamic_config = path ('Alien::curl'->dist_dir . '/dynamic/curl-config');
       if (-e $dynamic_config) {
         say 'Adding curl support';
-        $with_curl = "--with-curl=$dynamic_config";
+        $enable_curl = "ON";
       }
       elsif ('Alien::curl'->install_type eq 'system') {
         if ('Alien::curl'->cflags =~ /STATIC_LIB/) {
-          $with_curl = '--without-curl';
+          $enable_curl = 'OFF';
           say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
         }
         else {
           say 'Adding curl support from system';
-          $with_curl = "--with-curl";
+          $enable_curl = "ON";
         }
       }
       else {
         say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
         #  until we depend on an Alien::libcurl that provides a dynamic curl-config
-        $with_curl = '--without-curl';  
+        $enable_curl = 'OFF';  
       }
     }
   }
@@ -221,7 +221,7 @@ share {
     '-DBUILD_SHARED_LIBS=ON',
     #'-DSQLITE3_INCLUDE_DIR=??',
     #'-DSQLITE3_LIBRARY=??',
-    '-DENABLE_CURL=OFF',
+    "-DENABLE_CURL=$enable_curl",
     '-DENABLE_TIFF=OFF',
     '-DBUILD_PROJSYNC=OFF',
     #'-DENABLE_IPO=ON',
