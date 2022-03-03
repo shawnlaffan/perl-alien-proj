@@ -1,5 +1,11 @@
 Revision history for Alien::proj
 
+1.19 2022-03-04
+    - Shared builds: use FFI::CheckLib to find libs for sqlite3, tiff and curl
+
+1.18 2022-03-03
+    - Shared builds: Pass sqlite3 config args when using Alien::sqlite
+
 1.17 2022-03-02
     - Switch share build system to cmake as autotools is not
       supported from v9.0
