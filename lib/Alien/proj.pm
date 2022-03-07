@@ -104,7 +104,6 @@ Alien::proj - Compile the Proj library
  
 <p>
     <img src="https://img.shields.io/badge/perl-5.10+-blue.svg" alt="Requires Perl 5.10+" />
-    <a href="https://travis-ci.org/shawnlaffan/perl-alien-proj"><img src="https://travis-ci.org/shawnlaffan/perl-alien-proj.svg?branch=master" /></a>
     <a href="https://ci.appveyor.com/project/shawnlaffan/perl-alien-proj"><img src="https://ci.appveyor.com/api/projects/status/0j4yh071yw7xyjxx?svg=true" /></a>
 </p>
 
