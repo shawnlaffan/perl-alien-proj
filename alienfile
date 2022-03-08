@@ -63,11 +63,30 @@ plugin 'PkgConfig' => (
     pkg_name => 'proj',
     minimum_version => $min_target_version,
 );
-#plugin 'Probe::CommandLine' => (
-#  command  => 'projinfo',
-#  secondary => 1,  #  secondary to pkgconf probe
-#);
-
+if ($on_windows) {
+  #  possible GIS Internals distribution
+  if (my $path = `where geos_c.dll`) {
+    Alien::Build->log ('Found possible GIS Internals build');
+    $path = Path::Tiny::path ($path)->parent;
+    #  could be several variants
+    my @proj_dlls
+      = map {$_->[0]}
+        sort { versioncmp($a->[-1], $b->[-1]) }
+        map  { $_ =~ /(\d+)_(\d+)/; [$_, "$1.$2"] }
+        glob ("$path/proj*.dll");
+    $proj_dlls[-1] =~ /(\d+)_(\d+)/;
+    my $version = "$1.$2";
+    if (versioncmp ($version, $min_target_version) > 0) {
+      $path = Path::Tiny::path($proj_dlls[-1])->parent->stringify;
+      $path =~ s|\\|/|g;  #  path separators
+      Alien::Build->log ("Probe::CBuilder checking $path");
+      plugin 'Probe::CBuilder' => (
+        cflags => "-I$path/include",
+        libs   => "-L$path/lib -lproj",
+      );
+    }
+  }
+}
 
 
 share {
@@ -247,6 +266,9 @@ share {
   foreach my $env_var (qw /LD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
     say "ENV: $env_var is " . ($ENV{$env_var} // '');
   }
+
+#  might fix some rpath issues?
+#  https://github.com/OSGeo/gdal/issues/5413#issuecomment-1060286925
 
   my $cmake_cmd = [
     '%{cmake}',
