@@ -183,11 +183,11 @@ share {
   if ($proj_version ge 7) {
     if (!$have{'Alien::libtiff'} or $config_args =~ /--(without-tiff|with-tiff=no)/) {
       $enable_tiff = 'OFF';
-      say 'Disabling TIFF support';
+      Alien::Build->log ('Disabling TIFF support');
     }
     else {
       $enable_tiff = 'ON';
-      say 'Enabling TIFF support';
+      Alien::Build->log ('Enabling TIFF support');
       #  might need this but it depends on a few things
       if (Alien::libtiff->install_type ('share')) {
         my $libtiff_include = path ('Alien::libtiff'->dist_dir . '/include')->stringify;
@@ -207,7 +207,7 @@ share {
     else {
       my $dynamic_config = path ('Alien::curl'->dist_dir . '/dynamic/curl-config');
       if (-e $dynamic_config) {
-        say 'Adding curl support from dynamic dir does not yet work';
+        Alien::Build->log ("Adding curl support from " . 'Alien::curl'->dist_dir . "/dynamic");
         $enable_curl = "ON";
         push @PATH, path ('Alien::curl'->dist_dir . '/dynamic');
         my $curl_include = path ('Alien::curl'->dist_dir . '/include')->stringify;
@@ -223,15 +223,15 @@ share {
       elsif ('Alien::curl'->install_type eq 'system') {
         if ('Alien::curl'->cflags =~ /STATIC_LIB/) {
           $enable_curl = 'OFF';
-          say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
+          Alien::Build->log ('Disabling curl support.  You have Alien::curl but it lacks a dynamic curl-config');
         }
         else {
-          say 'Adding curl support from system';
+          Alien::Build->log ('Adding curl support from system');
           $enable_curl = "ON";
         }
       }
       else {
-        say 'Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config.';
+        Alien::Build->log ('Disabling curl support.  You have Alien::curl, but it lacks a dynamic curl-config');
         #  until we depend on an Alien::libcurl that provides a dynamic curl-config
         $enable_curl = 'OFF';  
       }
@@ -239,7 +239,7 @@ share {
   }
   my @sqlite_extra_args;
   if (Alien::sqlite->install_type ('share')) {
-    say 'Shared Alien::sqlite found, adding sqlite3 components to configure call';
+    Alien::Build->log ('Shared Alien::sqlite found, adding sqlite3 components to configure call');
     #  system install should have these in the relevant paths
     my $sqlite_include = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
     my $libfile = find_lib_file (
@@ -261,7 +261,7 @@ share {
   meta->around_hook( build => \&update_cmake_lists_file );
 
   #  silence an undef warning
-  say 'PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH;
+  Alien::Build->log ('PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH);
 
   foreach my $env_var (qw /LD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
     say "ENV: $env_var is " . ($ENV{$env_var} // '');
@@ -479,7 +479,7 @@ sub find_lib_file {
   #  all the same or point to the same origin
   my $libfile = $lib_files[0];
   $libfile =~ s|\\|/|g if $on_windows;
-  say "Found $args{lib} dynamic lib: $libfile";
+  Alien::Build->log ("Found $args{lib} dynamic lib: $libfile");
   return $libfile;
 }
 
