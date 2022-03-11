@@ -44,11 +44,64 @@ if ($^O eq 'darwin') {
 sub diag_dynamic_libs {
     diag "Dynamic lib dependencies:\n";
     if ($^O =~ /darwin/i) {
-        _diag_dynamic_libs_macos();
+        _diag_dynamic_libs_otool();
+    }
+    elsif ($^O =~ /mswin/i) {
+        #  do nothing - deps are handled via the path
+        diag "are not diagnosed on windows";
+    }
+    else {
+        _diag_dynamic_libs_ldd();
     }
 }
 
-sub _diag_dynamic_libs_macos {
+
+sub _dynamic_libs_ldd {
+    my $LDD = which('ldd')
+      or diag "ldd not found, skipping dynamic lib summary";
+    my @target_libs = Alien::proj->dynamic_libs;
+    my %seen;
+    
+    while (my $lib = shift @target_libs) {
+        #say "ldd $lib";
+        my $out = qx /$LDD $lib/;
+        warn qq["ldd $lib" failed\n]
+          if not $? == 0;
+        diag $out;
+
+        #  much of this logic is from PAR::Packer
+        #  https://github.com/rschupp/PAR-Packer/blob/04a133b034448adeb5444af1941a5d7947d8cafb/myldr/find_files_to_embed/ldd.pl#L47
+        my %dlls = $out =~ /^ \s* (\S+) \s* => \s* ( \/ \S+ ) /gmx;
+ 
+      DLL:
+        foreach my $name (keys %dlls) {
+            if ($seen{$name}) {
+                delete $dlls{$name};
+                next DLL;
+            }
+             
+            $seen{$name}++;
+ 
+            my $path = path($dlls{$name})->realpath;
+             
+            #say "Checking $name => $path";
+             
+            if (not -r $path) {
+                warn qq[# ldd reported strange path: $path\n];
+                delete $dlls{$name};
+            }
+            elsif (
+                 $path =~ m{^(?:/usr)?/lib(?:32|64)?/}  #  system lib
+              or $name =~ m{^lib(?:c|gcc_s|stdc\+\+)\.}  
+              ) {
+                delete $dlls{$name};
+            }
+        }
+        push @target_libs, values %dlls;
+    }
+}
+
+sub _diag_dynamic_libs_otool {
     my $OTOOL = which('otool')  or diag "otool not found, skipping dynamic lib summary";
     my @target_libs = Alien::proj->dynamic_libs;
     my %seen;
