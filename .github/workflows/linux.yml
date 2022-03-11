@@ -63,7 +63,8 @@ jobs:
           cpanm --notest local::lib
           echo $(perl -Mlocal::lib=${HOME}/perl5)
           eval "$(perl -Mlocal::lib=${HOME}/perl5)"
-          cpanm --notest Alien::Build  
+          cpanm --notest Alien::Build
+          cpanm --notest Alien::Build::Plugin::PkgConfig::PPWrapper
           cpanm --installdeps --notest Alien::sqlite
           cpanm -v Alien::sqlite
           cpanm --installdeps --notest Alien::libtiff
