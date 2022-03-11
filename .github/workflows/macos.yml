@@ -33,9 +33,6 @@ jobs:
           echo "{~/bin}" >> $GITHUB_PATH
           which perl
           which cpanm
-
-      - name: Install GDAL and its deps
-        run: brew install gdal
         
       - name: perl -V
         run: perl -V
