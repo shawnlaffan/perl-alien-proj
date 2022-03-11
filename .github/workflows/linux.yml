@@ -23,7 +23,7 @@ jobs:
         with:
           perl-version: '5.32'
 
-      - name: cmake for geos
+      - name: cmake
         run: |
           sudo apt-get --yes install cmake
 
