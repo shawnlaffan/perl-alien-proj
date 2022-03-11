@@ -42,6 +42,7 @@ if ($^O eq 'darwin') {
 }
 
 sub diag_dynamic_libs {
+    diag "Dynamic lib dependencies:\n";
     if ($^O =~ /darwin/i) {
         _diag_dynamic_libs_macos();
     }
@@ -56,7 +57,7 @@ sub _diag_dynamic_libs_macos {
         my @lib_arr = qx /$OTOOL -L $lib/;
         note qq["otool -L $lib" failed\n]
           if not $? == 0;
-        diag join "\n", @lib_arr;
+        diag join "", @lib_arr;
         shift @lib_arr;  #  first result is dylib we called otool on
         
         # follow any aliens or non-system paths
@@ -67,6 +68,7 @@ sub _diag_dynamic_libs_macos {
             next if $dylib =~ m{^/System};  #  skip system libs
             next if $dylib =~ m{^/usr/lib/libSystem};
             next if $dylib =~ m{^/usr/lib/};
+            next if $dylib =~ m{^\@rpath};
             $seen{$dylib}++;
             #  add this dylib to the search set
             push @target_libs, $dylib;
