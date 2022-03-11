@@ -57,6 +57,7 @@ jobs:
           cpanm --notest Alien::Build::MM
           cpanm --notest Sort::Versions
           cpanm --notest Alien::Build::Plugin::PkgConfig::PPWrapper
+          cpanm --notest Alien::sqlite
       
       - name: Build and then run tests
         run: |
