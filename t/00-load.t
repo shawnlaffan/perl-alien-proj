@@ -56,7 +56,7 @@ sub diag_dynamic_libs {
 }
 
 
-sub _dynamic_libs_ldd {
+sub _diag_dynamic_libs_ldd {
     my $LDD = which('ldd')
       or diag "ldd not found, skipping dynamic lib summary";
     my @target_libs = Alien::proj->dynamic_libs;
