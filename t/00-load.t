@@ -31,6 +31,7 @@ foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::curl/) {
     $alien_versions{$alien} = $alien->version;
 }
 
+diag_dynamic_libs();
 
 done_testing();
 
