@@ -4,6 +4,7 @@ use Test::More;
 use Test::Alien;
 use File::Which;
 use Config;
+use Path::Tiny;
 
 BEGIN {
     use_ok('Alien::proj') or BAIL_OUT('Failed to load Alien::proj');
