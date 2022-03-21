@@ -421,7 +421,7 @@ sub find_lib_file {
   
   my(@lib_files) = find_lib(
       %args,
-      system_path => [],  #  only search the alien
+      systempath => [],  #  only search the alien
   );
   #  we grab the first, assuming they are
   #  all the same or point to the same origin
