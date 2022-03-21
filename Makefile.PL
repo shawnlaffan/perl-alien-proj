@@ -16,6 +16,7 @@ my %common_reqs = (
     "File::Which" => 0,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
     "Alien::Build::Plugin::PkgConfig::PPWrapper" => '0',
+    "List::Util" => '0',
 );
 
 my %WriteMakefileArgs = (

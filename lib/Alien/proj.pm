@@ -6,31 +6,22 @@ use parent qw( Alien::Base );
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
 use File::Which qw /which/;
+use List::Util qw /uniq/;
 
-our $VERSION = '1.21';
+our $VERSION = '1.22';
 
+#  adding to global {DY}LD_LIBRARY_PATH vars is icky but seems
+#  to be needed for utilities and downstream FFI
 my %also;
 my @alien_bins = (__PACKAGE__->bin_dir);
-
+my @ld_lib_dirs;
 foreach my $alien_lib (qw /Alien::libtiff Alien::sqlite/) {
     if (eval "require $alien_lib" && $alien_lib->install_type eq 'share') {
         $also{$alien_lib}++;
         if ($alien_lib->install_type eq 'share') {
             push @alien_bins, $alien_lib->bin_dir;
         }
-        my $libdir = $alien_lib->dist_dir . q{/lib};
-        if ($^O =~ /darwin/i) {
-            push @DYLD_LIBRARY_PATH, $libdir
-              if !grep {/^$libdir$/}
-                  grep {defined}
-                  @DYLD_LIBRARY_PATH;
-        }
-        elsif (not $^O =~ /mswin/i) { 
-            push @LD_LIBRARY_PATH, $libdir
-              if !grep {/^$libdir$/}
-                  grep {defined}
-                  @LD_LIBRARY_PATH;
-        }
+        push @ld_lib_dirs, $alien_lib->dist_dir . q{/lib};
     }
 }
 if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
@@ -38,10 +29,18 @@ if (eval 'require Alien::curl' && 'Alien::curl'->install_type eq 'share') {
     if (-e 'Alien::curl'->dist_dir . '/dynamic/curl-config') {
         $also{'Alien::curl'}++;
         if (Alien::curl->install_type eq 'share') {
-            push @alien_bins, Alien::curl->dist_dir . '/dynamic';
+            push @alien_bins,  Alien::curl->dist_dir . '/dynamic';
+            push @ld_lib_dirs, Alien::curl->dist_dir . '/dynamic'
         }
     }
 }
+if ($^O =~ /darwin/i) {
+    @DYLD_LIBRARY_PATH = uniq (@DYLD_LIBRARY_PATH, @ld_lib_dirs);
+}
+elsif (not $^O =~ /mswin/i) { 
+    @LD_LIBRARY_PATH = uniq (@LD_LIBRARY_PATH, @ld_lib_dirs)
+}
+
 
 sub bin_dirs {
     my $self = shift;
