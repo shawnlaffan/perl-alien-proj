@@ -32,6 +32,13 @@ foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::curl/) {
     $alien_versions{$alien} = $alien->version;
 }
 
+if ($^O =~ /darwin/) {
+    diag '$ENV{DYLD_LIBRARY_PATH} = ' . ($ENV{DYLD_LIBRARY_PATH} // '');
+}
+elsif ($O !~ /mswin/i) {
+    diag '$ENV{LD_LIBRARY_PATH} = ' . ($ENV{LD_LIBRARY_PATH} // '');
+}
+
 diag_dynamic_libs();
 
 done_testing();
