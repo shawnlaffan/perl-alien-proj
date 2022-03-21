@@ -12,11 +12,24 @@ our $VERSION = '1.21';
 my %also;
 my @alien_bins = (__PACKAGE__->bin_dir);
 
-foreach my $lib (qw /Alien::libtiff Alien::sqlite/) {
-    if (eval "require $lib" && $lib->install_type eq 'share') {
-        $also{$lib}++;
-        if ($lib->install_type eq 'share') {
-            push @alien_bins, $lib->bin_dir;
+foreach my $alien_lib (qw /Alien::libtiff Alien::sqlite/) {
+    if (eval "require $alien_lib" && $alien_lib->install_type eq 'share') {
+        $also{$alien_lib}++;
+        if ($alien_lib->install_type eq 'share') {
+            push @alien_bins, $alien_lib->bin_dir;
+        }
+        my $libdir = $alien_lib->dist_dir . q{/lib};
+        if ($^O =~ /darwin/i) {
+            push @DYLD_LIBRARY_PATH, $libdir
+              if !grep {/^$libdir$/}
+                  grep {defined}
+                  @DYLD_LIBRARY_PATH;
+        }
+        elsif (not $^O =~ /mswin/i) { 
+            push @LD_LIBRARY_PATH, $libdir
+              if !grep {/^$libdir$/}
+                  grep {defined}
+                  @LD_LIBRARY_PATH;
         }
     }
 }
