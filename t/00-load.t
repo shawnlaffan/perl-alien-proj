@@ -68,6 +68,7 @@ sub _diag_dynamic_libs_ldd {
         my $out = qx /$LDD $lib/;
         warn qq["ldd $lib" failed\n]
           if not $? == 0;
+        diag "$lib:";
         diag $out;
 
         #  much of this logic is from PAR::Packer
@@ -111,6 +112,7 @@ sub _diag_dynamic_libs_otool {
         my @lib_arr = qx /$OTOOL -L $lib/;
         note qq["otool -L $lib" failed\n]
           if not $? == 0;
+        diag "$lib:";
         diag join "", @lib_arr;
         shift @lib_arr;  #  first result is dylib we called otool on
         

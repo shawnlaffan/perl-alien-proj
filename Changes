@@ -1,5 +1,9 @@
 Revision history for Alien::proj
 
+1.21 2022-03-21
+    - fix argument spelling in alienfile, otherwise share
+      builds get mixed system and shared libs from deps.
+
 1.20 2022-03-04
     - Shared builds: avoid windows path separator issues
     - alienfile: minor refactor
