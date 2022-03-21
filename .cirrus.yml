@@ -5,19 +5,31 @@ task:
   env:
     CIRRUS_CLONE_DEPTH: 1
     MAKE_FLAGS: -j 4
-  
+
+  cpan_cache:
+    folder: /perl5
+    reupload_on_changes: false # set to false if there is a fingerprint script
+    fingerprint_script:
+      - echo $CIRRUS_OS 20220321a
+
   install_script:
     - sudo pkg install -y pkgconf sqlite3 tiff gmake curl cmake
     - sudo pkg install -y perl5 p5-App-cpanminus
-    #- sudo cpanm --installdeps .
-    - sudo cpanm Data::Dump
-    - sudo cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
-    - sudo cpanm --installdeps --notest Alien::proj
-    - sudo cpanm Alien::curl
-    - sudo cpanm Alien::libtiff
+    - sudo cpanm local::lib
+    #- cpanm --local-lib=$PERL_MOD_DIR local::lib && eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
+    - echo probe local::lib
+    - perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib
+    - echo Run it anyway...
+    - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
+    - cpanm Data::Dump
+    - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
+    - cpanm --installdeps --notest Alien::proj
+    - cpanm Alien::curl
+    - cpanm Alien::libtiff
 
   script:
+    - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - perl Makefile.PL
-    - sudo cpanm --installdeps .
+    - cpanm --installdeps .
     - make
     - make test
