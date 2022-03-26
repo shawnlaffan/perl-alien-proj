@@ -258,6 +258,14 @@ share {
   plugin 'PkgConfig::PPWrapper';
   meta->around_hook( build => \&remove_gitfw_from_path );
   meta->around_hook( build => \&update_cmake_lists_file );
+  meta->around_hook(
+    build => sub {
+      my ($orig, $build, @args) = @_;
+      $build->log("Setting CCACHE_BASEDIR to " . getcwd());
+      local $ENV{CCACHE_BASEDIR} = getcwd();
+      $orig->($build, @args);
+    }
+  );
 
   #  silence an undef warning
   Alien::Build->log ('PKG_CONFIG_PATH:' . join ' ', grep {defined} @PKG_CONFIG_PATH);
