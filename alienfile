@@ -195,7 +195,7 @@ share {
           lib   => 'tiff',
           alien => 'Alien::libtiff',
         );
-        push @curl_extra_args, (
+        push @tiff_extra_args, (
           "-DTIFF_LIBRARY=$libfile",
           "-DTIFF_INCLUDE_DIR=$libtiff_include",
         );
@@ -228,6 +228,15 @@ share {
         else {
           Alien::Build->log ('Adding curl support from system');
           $enable_curl = "ON";
+          my $libfile = find_lib_file (
+            lib   => 'curl',
+          );
+          my $curl_include = Alien::curl->cflags;
+          $curl_include =~s/^-I//g;  #  hack
+          push @curl_extra_args, (
+            "-DCURL_LIBRARY=$libfile",
+            "-DCURL_INCLUDE_DIR=$curl_include",
+          );
         }
       }
       else {
@@ -288,9 +297,9 @@ share {
     #'-DSQLITE3_INCLUDE_DIR=??',
     #'-DSQLITE3_LIBRARY=??',
     "-DENABLE_CURL=$enable_curl",
-    @curl_extra_args,
+    $enable_curl eq 'ON' ? @curl_extra_args : (),
     "-DENABLE_TIFF=$enable_tiff",
-    $enable_tiff ? () : (),
+    $enable_tiff eq 'ON' ? @tiff_extra_args : (),
     '-DBUILD_PROJSYNC=OFF',
     #'-DENABLE_IPO=ON',
     #'-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true',
@@ -429,7 +438,7 @@ sub find_lib_file {
   
   my(@lib_files) = find_lib(
       %args,
-      systempath => [],  #  only search the alien
+      systempath => $args{alien} ? [] : undef,  #  only search the alien if one is passed
   );
   #  we grab the first, assuming they are
   #  all the same or point to the same origin
