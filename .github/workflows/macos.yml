@@ -63,4 +63,5 @@ jobs:
         run: |
           perl Makefile.PL
           cpanm --installdeps .
+          export DIAG_RPATH=1
           MAKEFLAGS=-j4 make test
