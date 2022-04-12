@@ -27,6 +27,7 @@ my %WriteMakefileArgs = (
     "CONFIGURE_REQUIRES" => {
         %common_reqs,
         "PkgConfig"  => 0,
+        "Capture::Tiny" => "0",
     },
     "BUILD_REQUIRES" => {
         %common_reqs,

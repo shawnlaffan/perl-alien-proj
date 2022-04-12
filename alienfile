@@ -63,6 +63,31 @@ plugin 'PkgConfig' => (
     pkg_name => 'proj',
     minimum_version => $min_target_version,
 );
+#Alien::Build->log ('Alien::Build::Plugin::PkgConfig::Negotiate'->pick);
+if ($^O =~ /linux/i && 'Alien::Build::Plugin::PkgConfig::Negotiate'->pick =~ /CommandLine/i) {
+  #my $pk_util =  Alien::Build::Plugin::PkgConfig::CommandLine::_bin_name();
+  my $pk_util = meta_prop->{env}->{PKG_CONFIG};
+  Alien::Build->log ('PK: ' . $pk_util);
+  if ($pk_util eq 'pkgconf') {
+    use Capture::Tiny qw /capture/;
+    #  get the current path
+    my ($stdout, $stderr, @err) = capture {system qw /pkgconf --variable pc_path pkgconf/};
+    #Alien::Build->log ('PK: ' . $stdout);
+    my @pk_path = split ':', $stdout;
+    foreach my $path (qw |/usr/local/lib/pkgconfig /usr/local/lib64/pkgconfig|) {
+      if (-d $path && !grep {$path} @pk_path) {
+        push @PKG_CONFIG_PATH, $path;
+      }
+    }
+    #  and try again
+    #Alien::Build->log ('PKXX: ' . $ENV{PKG_CONFIG_PATH});
+    plugin 'PkgConfig' => (
+        pkg_name => 'proj',
+        minimum_version => $min_target_version,
+    );
+  }
+}
+
 if ($on_windows) {
   #  possible GIS Internals distribution
   if (my $path = `where geos_c.dll`) {
@@ -405,7 +430,7 @@ sub update_cmake_lists_file {
 
     #  only needed on windows for v9.0.0 or earlier
     return $orig->($build, @args)
-      if $on_windows and versioncmp (get_proj_version(), '9.0.0') < 0; 
+      if $on_windows and versioncmp (get_proj_version(), '9.0.0') <= 0; 
 
     $build->log ('updating CMakeLists.txt to properly handle proj.pc');
     
