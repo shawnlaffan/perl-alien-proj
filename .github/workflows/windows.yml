@@ -28,7 +28,6 @@ jobs:
         run: |
           choco install strawberryperl
           echo "C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          ###echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
           choco install sqlite
 
   
@@ -40,7 +39,7 @@ jobs:
       - name: Prepare for CPAN cache
         run: |
           perl -V > perlversion.txt
-          echo 'update 20220322' >> perlversion.txt
+          echo 'update 20220413' >> perlversion.txt
           dir perlversion.txt
 
       - name: Cache CPAN modules
@@ -54,7 +53,7 @@ jobs:
       - name: Prepare for Alien cache
         run: |
           perl -V > aliencache.txt
-          echo 'aliens 20220302' >> aliencache.txt
+          echo 'aliens 20220413' >> aliencache.txt
           dir aliencache.txt
 
       - name: Cache Alien downloads
