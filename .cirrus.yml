@@ -23,7 +23,7 @@ task:
     - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - # some debug
     - cpanm --installdeps Path::Tiny
-    - cpanm -v Path::Tiny  
+    - cpanm --notest Path::Tiny  
     - cpanm Data::Dump
     - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
     - cpanm --installdeps --notest Alien::proj
