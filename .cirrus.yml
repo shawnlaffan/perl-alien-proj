@@ -1,5 +1,5 @@
 freebsd_instance:
-  image_family: freebsd-13-0
+  image_family: freebsd-13-2
 
 task:
   env:
@@ -10,12 +10,12 @@ task:
     folder: /perl5
     reupload_on_changes: false # set to false if there is a fingerprint script
     fingerprint_script:
-      - echo $CIRRUS_OS 20220413
+      - echo $CIRRUS_OS 20230924
 
   install_script:
     - sudo pkg install -y pkgconf sqlite3 tiff gmake curl cmake
-    - sudo pkg install -y perl5 p5-App-cpanminus
-    - sudo cpanm local::lib
+    - sudo pkg install -y p5-App-cpanminus p5-local-lib
+    #- sudo cpanm local::lib
     #- cpanm --local-lib=$PERL_MOD_DIR local::lib && eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - echo probe local::lib
     - perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib
@@ -24,7 +24,7 @@ task:
     - cpanm Data::Dump
     - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
     - cpanm --installdeps --notest Alien::proj
-    - cpanm Alien::curl
+#    - cpanm -v Alien::curl
     - cpanm Alien::libtiff
 
   script:
