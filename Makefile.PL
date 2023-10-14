@@ -26,6 +26,7 @@ my %WriteMakefileArgs = (
     "VERSION_FROM" => "lib/Alien/proj.pm",
     "CONFIGURE_REQUIRES" => {
         %common_reqs,
+        "ExtUtils::CBuilder" => "0.27",  # have_cplusplus
         "PkgConfig"  => 0,
     },
     "BUILD_REQUIRES" => {

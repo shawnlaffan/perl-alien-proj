@@ -15,6 +15,10 @@ my $on_automated_rig
   || $ENV{CI};
 
 
+use ExtUtils::CBuilder;
+say "Error: PROJ requires a C++ compiler, which was not found on this system."
+    unless eval { ExtUtils::CBuilder->new->have_cplusplus };
+
 use Cwd;
 my $base_dir = getcwd();
 
