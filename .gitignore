@@ -42,3 +42,6 @@ Alien-proj-*.tar.gz
 ^_alien
 
 ^_archives
+
+/.idea
+/*.iml
