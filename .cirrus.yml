@@ -1,5 +1,5 @@
 freebsd_instance:
-  image_family: freebsd-13-2
+  image_family: freebsd-14-1
 
 task:
   env:
@@ -10,7 +10,7 @@ task:
     folder: /perl5
     reupload_on_changes: false # set to false if there is a fingerprint script
     fingerprint_script:
-      - echo $CIRRUS_OS 20231212
+      - echo $CIRRUS_OS 20241023
 
   install_script:
     - sudo pkg install -y pkgconf sqlite3 tiff gmake curl cmake
