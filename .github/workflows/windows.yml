@@ -105,7 +105,8 @@ jobs:
       - name: Install Alien::libtiff and Alien::curl
         run: |
           cpanm Alien::libtiff  #  will be a system install under strawberry
-          cpanm Alien::curl
+          #  disable for now
+          #  cpanm Alien::curl
   
       - name:  gcc
         run: |
