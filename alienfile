@@ -57,7 +57,7 @@ plugin 'Build::SearchDep' => (
   public_l => 1,
 );
 
-my $min_target_version = '6.1';
+my $min_target_version = '7.1';
 
 plugin 'PkgConfig' => (
     pkg_name => 'proj',
