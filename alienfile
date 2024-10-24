@@ -51,12 +51,6 @@ if ($have{$lib}) {
 
 say "Alien::sqlite has sqlite version " . Alien::sqlite->version;
 
-plugin 'Build::SearchDep' => (
-  aliens   => [ @dep_aliens ],
-  public_I => 1,
-  public_l => 1,
-);
-
 my $min_target_version = '7.1';
 
 plugin 'PkgConfig' => (
@@ -106,6 +100,12 @@ share {
   #        . 'Alien::libtiff'->libs;
   #  say "libtiff libs: $ENV{TIFF_LIBS}";
   #}
+
+  plugin 'Build::SearchDep' => (
+    aliens   => [ @dep_aliens ],
+    public_I => 1,
+    public_l => 1,
+  );
 
 
   if ($on_windows) {
