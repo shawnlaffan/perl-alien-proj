@@ -149,6 +149,8 @@ The Proj library can be accessed from Perl code via the L<Geo::Proj4> package.
 Note: As of version 1.07, share installs will look for libtiff and curl support for proj 7
 and include them if they are found, except that curl will not be added if it is statically compiled.
 
+The PROJ library requires a C++ compiler.
+
 
 =head1 User defined config args
 
