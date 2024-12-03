@@ -53,6 +53,7 @@ jobs:
 
       - name: Install Dynamic Dependencies
         run: |
+          cpanm -v --notest Net::SSLeay  #  temporary
           cpanm --notest Alien::Build
           cpanm --notest Alien::Build::MM
           cpanm --notest Sort::Versions
