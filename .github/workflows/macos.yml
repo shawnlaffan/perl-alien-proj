@@ -40,7 +40,7 @@ jobs:
       - name: Prepare for cache
         run: |
           perl -V > perlversion.txt
-          echo '20220311' >> perlversion.txt
+          echo '20241203' >> perlversion.txt
           ls -l perlversion.txt
 
       - name: Cache CPAN modules
@@ -53,6 +53,7 @@ jobs:
 
       - name: Install Dynamic Dependencies
         run: |
+          cpanm -v --notest Net::SSLeay  #  temporary
           cpanm --notest Alien::Build
           cpanm --notest Alien::Build::MM
           cpanm --notest Sort::Versions
