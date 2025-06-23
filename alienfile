@@ -377,6 +377,7 @@ sub remove_gitfw_from_path {
 
   @PATH
     = grep {path($_)->stringify =~ m|/usr/bin$| && path($_) ne $msys_path ? () : $_}
+      grep {length}
       @PATH;
 
   my $removed = $count - @PATH;
