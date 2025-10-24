@@ -5,11 +5,12 @@ skip_tags: true
 
 cache:
   - C:\strawberry
-  - .alienbuild\plugin_fetch_cache
+#  - .alienbuild\plugin_fetch_cache
 
 install:
-  - if not exist "C:\strawberry" choco install strawberryperl --version 5.26.1.1
   - set ST=C:\strawberry
+#  - if exist %ST% rd /s /q %ST%
+  - if not exist %ST% choco install strawberryperl --version 5.42.0.1
   - set PATH=%ST%\perl\bin;%ST%\perl\site\bin;%ST%\c\bin;%PATH%
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
   #  ensure we have some packages that aren't picked up by the install system
@@ -27,13 +28,13 @@ install:
   - cpanm -v Alien::sqlite
   - perl -MAlien::sqlite -E "say Alien::sqlite->version";
   - perl -MAlien::sqlite -E "say Alien::sqlite->install_type";
-  - cpanm Alien::curl
-  - cpanm -v Alien::libtiff
+  #- cpanm Alien::curl
+  #- cpanm -v Alien::libtiff
 
   - gcc -v
 
 build_script:
-  - set ALIEN_BUILD_PRELOAD=Fetch::Cache
+  #- set ALIEN_BUILD_PRELOAD=Fetch::Cache
   #- set ALIEN_PROJ_CONFIG_ARGS="--enable-tiff=no"
   - perl Makefile.PL
   - cpanm --installdeps --notest .
