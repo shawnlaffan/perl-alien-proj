@@ -12,7 +12,7 @@ UTILITY:
         && !which 'projinfo';
     
     my ($result, $stderr, $exit) = Alien::proj->run_utility ("cs2cs");
-    like ($stderr, qr{Rel. \d\.\d\.\d, .+ \d{4}},
+    like ($stderr, qr{Rel. \d\.\d\.\d( \(.+\))?, .+ \d{4}},
         'Got expected result from cs2cs utility');
     diag '';
     diag ("\nUtility results:\n" . $result);
